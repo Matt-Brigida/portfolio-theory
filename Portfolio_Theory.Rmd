@@ -1,0 +1,17 @@
+---
+title: "Portfolio Theory"
+author: "Matt Brigida"
+date: "November 27, 2015"
+output: html_document
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+Despite 'theory' in the title, this course will teach you how to construct portfolios in the real world.  In fact, some of the most interesting topics in this course will be on how to implement the theories we have learned.  
+
+Through this course the student will gain a working knowledge of what we mean by the term *risk* in finance.  There will be differing measures of risk depending on the assumptions you make about the world.  Then, for a given set of assumptions, risk will directly determine portfolio allocations.  We'll also cover an extension of this, where the resulting portfolio allocations will imply an equilibrium expected return for each asset (the CAPM).  An apt alternative title for this course would be 'Risk and its Implications'. 
