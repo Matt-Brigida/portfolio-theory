@@ -10,6 +10,11 @@ runtime: shiny
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+<!---
+Note, much of the R code in this text was written long ago, when I wrote even worse R code than I do now.  The code works, but it is inefficient and ugly.  I decided not to rewrite it however, feeling it more important to get the text out and into students' hands.  If you can improve the code, please feel free.  Pull requests are always welcome.
+-->
+
+
 # Introduction
 
 Despite 'theory' in the title, this course will teach you how to construct portfolios in the real world.  In fact, some of the most interesting topics in this course will be on how to implement the theories we have learned.  
@@ -18,62 +23,65 @@ Through this course the student will gain a working knowledge of what we mean by
 
 
 
+### How good of an approximation is the normal distribution?
 
-```{r}
+```{r comparetoNormal, echo=FALSE}
 ## compare normal and empirical distributions 
+
+inputPanel(
+  textInput("ticker1", "Stock Ticker", value = "GE"),
+  dateInput("startDate1", "Start Date", value = "2015-01-01")
+)
+
+renderPlot({
 library(tseries)
 library(quantmod)
-
-
-
-f <- function(x, y, z, l1, l2) {
-    ## x is the stock ticker in quotes, y is the number of days of history you
-    ## want, and l1 and l2 are the coordinates of the plot legend.
-    
-    x <- get.hist.quote(x, start = y, quote = "Close")
+  
+    x <- get.hist.quote(input$ticker1, start = input$startDate1, quote = "Close")
     x <- xts(x)
     r <- Delt(x, type = 'log')[-1]
 
-    plot(density(r), main = "Forecasted Normal Distribution versus Actual Normal Distribution", lty = 1, 
-        col = 1, lwd = 2, xlab = "Log-Returns in %/100", sub = "Matthew Brigida; Clarion UofP")
+    plot(density(r), main = "Normal versus Empirical Distribution", lty = 1, 
+        col = 1, lwd = 2, xlab = "Log-Returns in %/100") #, sub = "Matthew Brigida; Clarion UofP")
 
-    lines(density(rnorm(5e+05, mean = mean(r[z]), sd = sd(r))), lty = 4, col = 2, 
+    lines(density(rnorm(5e+05, mean = mean(r), sd = sd(r))), lty = 4, col = 2, 
         lwd = 2)
 
-    legend(l1, l2, c("Stock Return Density", "Normal Density"), col = c(1, 2), 
+    legend("topright", c("Stock Return Density", "Normal Density"), col = c(1, 2), 
         lty = c(1, 4), lwd = c(2, 2))
 
-    cat("The sample skewness is", skewness(r), "\n")
-    cat("For a t-statistic of", skewness(r)/(sqrt(6/length(r))), "\n")
-    p1 <- 2 * (1 - pt(abs(skewness(r)/(sqrt(6/length(r)))), length(r) - 1))
-    cat("And a p-value of", p1, "\n")
-    cat("So we", ifelse(p1 < 0.05, "reject the null, and find the distribution is skewed.", 
-        "do not reject the null, the distribution is symmetric."), "\n")
-    cat("\n")
-
-    cat("The sample excess kurtosis is", kurtosis(r)[1], "\n")
-    cat("For a t-statistic of", kurtosis(r)/(sqrt(24/length(r))), "\n")
-    p2 <- 2 * (1 - pt(abs(kurtosis(r)/(sqrt(24/length(r)))), length(r) - 1))
-    cat("And a p-value of", p2, "\n")
-    cat("So we", ifelse(p2 < 0.05, "reject the null, and find the distribution has fat tails.", 
-        "do not reject the null, the distribution does not have fat tails."), 
-        "\n")
-    cat("\n")
-
-    rm(x)
-    rm(r)
-    rm(p1)
-    rm(p2)
-}
+    # cat("The sample skewness is", skewness(r), "\n")
+    # cat("For a t-statistic of", skewness(r)/(sqrt(6/length(r))), "\n")
+    # p1 <- 2 * (1 - pt(abs(skewness(r)/(sqrt(6/length(r)))), length(r) - 1))
+    # cat("And a p-value of", p1, "\n")
+    # cat("So we", ifelse(p1 < 0.05, "reject the null, and find the distribution is skewed.", 
+    #     "do not reject the null, the distribution is symmetric."), "\n")
+    # cat("\n")
+    # 
+    # cat("The sample excess kurtosis is", kurtosis(r)[1], "\n")
+    # cat("For a t-statistic of", kurtosis(r)/(sqrt(24/length(r))), "\n")
+    # p2 <- 2 * (1 - pt(abs(kurtosis(r)/(sqrt(24/length(r)))), length(r) - 1))
+    # cat("And a p-value of", p2, "\n")
+    # cat("So we", ifelse(p2 < 0.05, "reject the null, and find the distribution has fat tails.", 
+    #     "do not reject the null, the distribution does not have fat tails."), 
+    #     "\n")
+    # cat("\n")
+})    
 ```
 
 
+<br/>
+<br/>
+<br/>
+<br/>
 
 
 Testing for Portfolio Alpha
 ========================================================
 
-```{r, message=FALSE,warning=FALSE}
+
+
+```{r, message=FALSE,warning=FALSE, cache=TRUE}
 library(quantmod)
 env <- new.env()
 Symbols <- c('SPY', 'QQQ', 'XLF', 'TLT','IBM','AAPL','XOM','BP','DDD')
@@ -81,6 +89,8 @@ getSymbols(Symbols = Symbols, env = env, from = '2013-01-01')
 args <- eapply(env = env, FUN = function(x){ClCl(x)})[Symbols]
 returns <- na.omit(do.call(what = merge, args = args))
 colnames(returns) <- Symbols
+
+## the basis for the code above is from the stackoverflow post here: (need to find and cite, note it might be quant.SE)
 
 srets <- as.matrix(returns)
 X <- cbind(1,srets[,1])
