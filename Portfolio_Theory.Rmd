@@ -15,3 +15,93 @@ knitr::opts_chunk$set(echo = TRUE)
 Despite 'theory' in the title, this course will teach you how to construct portfolios in the real world.  In fact, some of the most interesting topics in this course will be on how to implement the theories we have learned.  
 
 Through this course the student will gain a working knowledge of what we mean by the term *risk* in finance.  There will be differing measures of risk depending on the assumptions you make about the world.  Then, for a given set of assumptions, risk will directly determine portfolio allocations.  We'll also cover an extension of this, where the resulting portfolio allocations will imply an equilibrium expected return for each asset (the CAPM).  An apt alternative title for this course would be 'Risk and its Implications'. 
+
+
+
+
+```{r}
+## compare normal and empirical distributions 
+library(tseries)
+library(quantmod)
+
+
+
+f <- function(x, y, z, l1, l2) {
+    ## x is the stock ticker in quotes, y is the number of days of history you
+    ## want, and l1 and l2 are the coordinates of the plot legend.
+    
+    x <- get.hist.quote(x, start = y, quote = "Close")
+    x <- xts(x)
+    r <- Delt(x, type = 'log')[-1]
+
+    plot(density(r), main = "Forecasted Normal Distribution versus Actual Normal Distribution", lty = 1, 
+        col = 1, lwd = 2, xlab = "Log-Returns in %/100", sub = "Matthew Brigida; Clarion UofP")
+
+    lines(density(rnorm(5e+05, mean = mean(r[z]), sd = sd(r))), lty = 4, col = 2, 
+        lwd = 2)
+
+    legend(l1, l2, c("Stock Return Density", "Normal Density"), col = c(1, 2), 
+        lty = c(1, 4), lwd = c(2, 2))
+
+    cat("The sample skewness is", skewness(r), "\n")
+    cat("For a t-statistic of", skewness(r)/(sqrt(6/length(r))), "\n")
+    p1 <- 2 * (1 - pt(abs(skewness(r)/(sqrt(6/length(r)))), length(r) - 1))
+    cat("And a p-value of", p1, "\n")
+    cat("So we", ifelse(p1 < 0.05, "reject the null, and find the distribution is skewed.", 
+        "do not reject the null, the distribution is symmetric."), "\n")
+    cat("\n")
+
+    cat("The sample excess kurtosis is", kurtosis(r)[1], "\n")
+    cat("For a t-statistic of", kurtosis(r)/(sqrt(24/length(r))), "\n")
+    p2 <- 2 * (1 - pt(abs(kurtosis(r)/(sqrt(24/length(r)))), length(r) - 1))
+    cat("And a p-value of", p2, "\n")
+    cat("So we", ifelse(p2 < 0.05, "reject the null, and find the distribution has fat tails.", 
+        "do not reject the null, the distribution does not have fat tails."), 
+        "\n")
+    cat("\n")
+
+    rm(x)
+    rm(r)
+    rm(p1)
+    rm(p2)
+}
+```
+
+
+
+
+Testing for Portfolio Alpha
+========================================================
+
+```{r, message=FALSE,warning=FALSE}
+library(quantmod)
+env <- new.env()
+Symbols <- c('SPY', 'QQQ', 'XLF', 'TLT','IBM','AAPL','XOM','BP','DDD')
+getSymbols(Symbols = Symbols, env = env, from = '2013-01-01')
+args <- eapply(env = env, FUN = function(x){ClCl(x)})[Symbols]
+returns <- na.omit(do.call(what = merge, args = args))
+colnames(returns) <- Symbols
+
+srets <- as.matrix(returns)
+X <- cbind(1,srets[,1])
+alpha <- 0
+beta <- 0
+
+for (i in 1:dim(srets)[2]) {
+alpha[i] <- (solve(t(X) %*% X) %*% t(X) %*% srets[1:(dim(srets)[1]),i])[1]
+beta[i] <- (solve(t(X) %*% X) %*% t(X) %*% srets[1:(dim(srets)[1]),i])[2]}
+
+t.test(alpha)
+
+plot(density(alpha), main = "Empirical Density Function", xlab = "alpha")
+
+ab <- rbind(alpha,beta)
+
+ab <- as.data.frame(ab)
+
+names(ab) <- Symbols
+
+attach(ab)
+
+t.test(alpha[beta > 1],alpha[beta < 1])
+```
