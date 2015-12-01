@@ -76,6 +76,63 @@ library(quantmod)
 <br/>
 
 
+
+Portfolio Frontier with Two Risky Assets and Varying Correlation
+
+=========================================================================
+
+
+```{r, echo = FALSE}
+inputPanel({
+    sliderInput("correl", "Correlation Coefficient", min = -1, max = 1, step = 0.01, value = 0.5, animate = TRUE)
+})
+
+renderPlot({
+
+w.e <- seq(-.5,1.5, by=.01)
+w.d <- 1 - w.e
+r.e <- .12
+r.d <- .09
+E <- w.e*r.e+w.d*r.d
+s.e <- .2
+s.d <- .11
+S <- sqrt((w.e^2)*s.e^2+(w.d^2)*s.d^2+2*w.d*w.e*s.e*s.d*input$correl)
+plot(S, E, type='l', xlim=c(0,.3), xlab='Portfolio Standard Deviation', ylab='Portfolio Expected Return', col = 'green')
+})
+## f <- seq(-1, 1, by = .1)
+## S2 <- matrix(0, nrow=201, ncol=21)
+## for (i in 1:21){Sys.sleep(.5)
+##   S2[,i] <- sqrt((w.e^2)*s.e^2+(w.d^2)*s.d^2+2*w.d*w.e*s.e*s.d*f[i])
+##   lines(S2[,i], E, col=i, lwd=2)}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Testing for Portfolio Alpha
 ========================================================
 
