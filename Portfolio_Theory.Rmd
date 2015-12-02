@@ -81,6 +81,7 @@ Portfolio Frontier with Two Risky Assets and Varying Correlation
 
 =========================================================================
 
+The following widget shows the efficient frontier for a portfolio of two assets.
 
 ```{r, echo = FALSE}
 inputPanel({
@@ -88,7 +89,8 @@ inputPanel({
 })
 
 renderPlot({
-
+    library(ggvis)
+    
 w.e <- seq(-.5,1.5, by=.01)
 w.d <- 1 - w.e
 r.e <- .12
@@ -98,6 +100,41 @@ s.e <- .2
 s.d <- .11
 S <- sqrt((w.e^2)*s.e^2+(w.d^2)*s.d^2+2*w.d*w.e*s.e*s.d*input$correl)
 plot(S, E, type='l', xlim=c(0,.3), xlab='Portfolio Standard Deviation', ylab='Portfolio Expected Return', col = 'green')
+
+
+## ggvis attempt -- all looks good except for overlapping legend.    
+##     effFront <- cbind(E,S, w.e)
+##     effFront <- data.frame(effFront)
+##     asset <- 0
+##     for(i in 1:dim(effFront)[1]){
+##         if(effFront$w.e[i] == 1){
+##         asset[i] = "Equity" 
+##     } else {
+##         if(effFront$w.e[i] == 0){
+##             asset[i] = "Debt" 
+##         } else {
+##             asset[i] = "Combined"
+##         }
+##     }
+##     }
+
+##     size.pt <- 0
+##     for(i in 1:dim(effFront)[1]){
+##         if(effFront$w.e[i] == 1){
+##         size.pt[i] = 5
+##     } else {
+##         if(effFront$w.e[i] == 0){
+##             size.pt[i] = 5 
+##         } else {
+##             size.pt[i] = 1
+##         }
+##     }
+##     }
+    
+## effFront <- cbind(effFront, asset, size.pt)
+## p <- effFront %>% ggvis(~S, ~E, size = ~size.pt) %>% layer_points(fill = ~factor(asset)) #%>% add_legend(c("fill", "size"))
+
+##     p %>% scale_numeric("size", domain = c("Equity", "Debt", "Combined"), range = c(7, 7, 1))
 })
 ## f <- seq(-1, 1, by = .1)
 ## S2 <- matrix(0, nrow=201, ncol=21)
