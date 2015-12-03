@@ -78,10 +78,12 @@ library(quantmod)
 
 
 Portfolio Frontier with Two Risky Assets and Varying Correlation
-
 =========================================================================
 
-The following widget shows the efficient frontier for a portfolio of two assets.
+The following widget shows the efficient frontier for a portfolio of two risky assets.  The first risky asset (call it 'Debt') has a 9\% expected return and 11\% standard deviation.  The second portfolio (call it 'Equity') has a 12\% expected return and a 20\% standard deviation.  You are free to change the correlation coefficient between Debt and Equiry returns, and see the resulting effect on the efficient frontier.
+
+What you should note, is that as you lower the correlation coefficient, you can receive the same expected return for less risk.  That is, investors benefit form the lower correlation.  If the correlation coefficient is -1, then you can construct a risk-free portfolio.  See below for the calculation.    
+
 
 ```{r, echo = FALSE}
 inputPanel({
@@ -89,18 +91,24 @@ inputPanel({
 })
 
 renderPlot({
-    library(ggvis)
+    ## library(ggvis)
     
-w.e <- seq(-.5,1.5, by=.01)
-w.d <- 1 - w.e
-r.e <- .12
-r.d <- .09
-E <- w.e*r.e+w.d*r.d
-s.e <- .2
-s.d <- .11
-S <- sqrt((w.e^2)*s.e^2+(w.d^2)*s.d^2+2*w.d*w.e*s.e*s.d*input$correl)
-plot(S, E, type='l', xlim=c(0,.3), xlab='Portfolio Standard Deviation', ylab='Portfolio Expected Return', col = 'green')
-
+    w.e <- seq(-.5,1.5, by=.01)
+    w.d <- 1 - w.e
+    r.e <- .12
+    r.d <- .09
+    E <- w.e*r.e+w.d*r.d
+    s.e <- .2
+    s.d <- .11
+    S <- sqrt((w.e^2)*s.e^2+(w.d^2)*s.d^2+2*w.d*w.e*s.e*s.d*input$correl)
+    dataEff <- data.frame(cbind(S,E,w.e))
+    ## plot(S, E, type='l', xlim=c(0,.3), xlab='Portfolio Standard Deviation', ylab='Portfolio Expected Return', col = 'green')
+    S.ports <- c(dataEff[dataEff$w.e == 0, ]$S, dataEff[dataEff$w.e == 1, ]$S)
+    E.ports <- c(dataEff[dataEff$w.e == 0, ]$E, dataEff[dataEff$w.e == 1, ]$E)
+    dataPorts <- cbind(S.ports, E.ports)
+    plot(dataPorts, type='p', xlim=c(0,.3), xlab='Portfolio Standard Deviation', ylab='Portfolio Expected Return', col = 'black', ylim = c(.08, .13))
+    lines(S, E, col = "green", lwd = 1.5)
+    text(dataPorts, labels = c("Debt", "Equity"), cex = 1, pos = 2)
 
 ## ggvis attempt -- all looks good except for overlapping legend.    
 ##     effFront <- cbind(E,S, w.e)
@@ -143,6 +151,9 @@ plot(S, E, type='l', xlim=c(0,.3), xlab='Portfolio Standard Deviation', ylab='Po
 ##   lines(S2[,i], E, col=i, lwd=2)}
 ```
 
+You can see if you set the coefficient to -1, then the efficient frontier has a point with no risk, and some expected return.  To calculate the expected return at that point, we first need to calculate the asset weights on the portfolio with no risk.
+
+#### Question:  Can the risk-free rate above be different from the risk-free rate on Treasury securities?  
 
 
 
