@@ -22,6 +22,19 @@ Despite 'theory' in the title, this course will teach you how to construct portf
 Through this course the student will gain a working knowledge of what we mean by the term *risk* in finance.  There will be differing measures of risk depending on the assumptions you make about the world.  Then, for a given set of assumptions, risk will directly determine portfolio allocations.  We'll also cover an extension of this, where the resulting portfolio allocations will imply an equilibrium expected return for each asset (the CAPM).  An apt alternative title for this course would be 'Risk and its Implications'. 
 
 
+## Risk and Return without Theory
+
+Mosts texts in portfolio theory start with a chart of the rate of return on different asset classes over time.  We'll be no different. However, take care to note the point of this exercise is simply to get an intuitive feel of the idea that taking more risk grants a higher return.
+
+
+
+### Ergodic Time Series
+
+You may point out that what we have just done is not really compelling evidence. We have looked at an historical sample of size 1, and implied that this must hold.  In fact, to make any sort of statement about the empirical relationship between risk and return we would need to sample many times from all possible histories, and then average over these histories.  Of course, we can only ever observe one history---an important distinction from empirical results in disciplines such as physics and chemistry.
+
+So we make the assumption that time series in finance are ergodic.  This means we assume that averaging over time gives the same result as averaging over possible histories. Note, this is an (necessary) assumption; both untestable and somewhat unreasonable. So view results with appropriate caution.
+
+Later, however we'll also see theories which imply a similar risk/return relationship. This will lend credence to these earlier empirical diversions.  
 
 ### How good of an approximation is the normal distribution?
 
