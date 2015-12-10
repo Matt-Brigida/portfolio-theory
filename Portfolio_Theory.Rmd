@@ -22,25 +22,33 @@ Despite 'theory' in the title, this course will teach you how to construct portf
 Through this course the student will gain a working knowledge of what we mean by the term *risk* in finance.  There will be differing measures of risk depending on the assumptions you make about the world.  Then, for a given set of assumptions, risk will directly determine portfolio allocations.  We'll also cover an extension of this, where the resulting portfolio allocations will imply an equilibrium expected return for each asset (the CAPM).  An apt alternative title for this course would be 'Risk and its Implications'. 
 
 
-## Risk and Return without Theory
+## Risk and Return Over our History
 
 Mosts texts in portfolio theory start with a chart of the rate of return on different asset classes over time.  We'll be no different. However, take care to note the point of this exercise is simply to get an intuitive feel of the idea that taking more risk grants a higher return.
 
+```{r riskReturnHistory, echo=FALSE}
 
+```
 
-### Ergodic Time Series
+### A Brief Note on Ergodicity 
 
 You may point out that what we have just done is not really compelling evidence. We have looked at an historical sample of size 1, and implied that this must hold.  In fact, to make any sort of statement about the empirical relationship between risk and return we would need to sample many times from all possible histories, and then average over these histories.  Of course, we can only ever observe one history---an important distinction from empirical results in disciplines such as physics and chemistry.
 
-So we make the assumption that time series in finance are ergodic.  This means we assume that averaging over time gives the same result as averaging over possible histories. Note, this is an (necessary) assumption; both untestable and somewhat unreasonable. So view results with appropriate caution.
+However, if the time series are ergodic, then averaging over time gives the same result as averaging over possible histories. The very interested student can see Hamilton's *Time Series Analysis*.  
 
-Later, however we'll also see theories which imply a similar risk/return relationship. This will lend credence to these earlier empirical diversions.  
+Later, however we'll also see theories which imply a similar risk/return relationship. This will lend credence to these earlier empirical observations.  
+
+## Risk Premia
+
+### The Standard Deviation
+
+### The Sharpe Ratio
 
 ### How good of an approximation is the normal distribution?
 
 ```{r comparetoNormal, echo=FALSE}
 ## compare normal and empirical distributions 
-
+#{{{
 inputPanel(
   textInput("ticker1", "Stock Ticker", value = "GE"),
   dateInput("startDate1", "Start Date", value = "2015-01-01")
@@ -80,6 +88,7 @@ library(quantmod)
     #     "\n")
     # cat("\n")
 })    
+#}}}
 ```
 
 
@@ -99,6 +108,8 @@ What you should note, is that as you lower the correlation coefficient, you can 
 
 
 ```{r, echo = FALSE}
+### Efficient Frontier: 2 assets ------
+#{{{
 inputPanel({
     sliderInput("correl", "Correlation Coefficient", min = -1, max = 1, step = 0.01, value = 0.5, animate = TRUE)
 })
@@ -162,6 +173,7 @@ renderPlot({
 ## for (i in 1:21){Sys.sleep(.5)
 ##   S2[,i] <- sqrt((w.e^2)*s.e^2+(w.d^2)*s.d^2+2*w.d*w.e*s.e*s.d*f[i])
 ##   lines(S2[,i], E, col=i, lwd=2)}
+#}}}
 ```
 
 You can see if you set the coefficient to -1, then the efficient frontier has a point with no risk, and some expected return.  To calculate the expected return at that point, we first need to calculate the asset weights on the portfolio with no risk.
