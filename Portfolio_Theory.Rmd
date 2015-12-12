@@ -44,6 +44,14 @@ Later, however we'll also see theories which imply a similar risk/return relatio
 
 ### The Sharpe Ratio
 
+The Sharpe Ratio is the ratio of an investment's reward to is volatility. In other words, it is what you receive in excess of the risk-free rate scaled by the risk you have to take to get that return.
+
+$Sharpe\ Ratio=\frac{Risk\ Premium}{Volatility}$
+
+where the volatility is defined as the standard deviation of excess returns.
+
+<!---insert app which will calculate historical sharpe ratios?-->
+
 ### How good of an approximation is the normal distribution?
 
 ```{r comparetoNormal, echo=FALSE}
