@@ -1,0 +1,140 @@
+---
+title: "Portfolio Theory: Chapter 2"
+author: "Matt Brigida"
+date: "November 27, 2015"
+output: html_document
+runtime: shiny
+---
+
+
+
+Portfolio Frontier with Two Risky Assets and Varying Correlation
+=========================================================================
+
+The following widget shows the efficient frontier for a portfolio of two risky assets.  The first risky asset (call it 'Debt') has a 9\% expected return and 11\% standard deviation.  The second portfolio (call it 'Equity') has a 12\% expected return and a 20\% standard deviation.  You are free to change the correlation coefficient between Debt and Equiry returns, and see the resulting effect on the efficient frontier.
+
+What you should note, is that as you lower the correlation coefficient, you can receive the same expected return for less risk.  That is, investors benefit form the lower correlation.  If the correlation coefficient is -1, then you can construct a risk-free portfolio.  See below for the calculation.    
+
+
+```{r, echo = FALSE}
+### Efficient Frontier: 2 assets ------
+#{{{
+inputPanel({
+    sliderInput("correl", "Correlation Coefficient", min = -1, max = 1, step = 0.01, value = 0.5, animate = TRUE)
+})
+
+renderPlot({
+    ## library(ggvis)
+    
+    w.e <- seq(-.5,1.5, by=.01)
+    w.d <- 1 - w.e
+    r.e <- .12
+    r.d <- .09
+    E <- w.e*r.e+w.d*r.d
+    s.e <- .2
+    s.d <- .11
+    S <- sqrt((w.e^2)*s.e^2+(w.d^2)*s.d^2+2*w.d*w.e*s.e*s.d*input$correl)
+    dataEff <- data.frame(cbind(S,E,w.e))
+    ## plot(S, E, type='l', xlim=c(0,.3), xlab='Portfolio Standard Deviation', ylab='Portfolio Expected Return', col = 'green')
+    S.ports <- c(dataEff[dataEff$w.e == 0, ]$S, dataEff[dataEff$w.e == 1, ]$S)
+    E.ports <- c(dataEff[dataEff$w.e == 0, ]$E, dataEff[dataEff$w.e == 1, ]$E)
+    dataPorts <- cbind(S.ports, E.ports)
+    plot(dataPorts, type='p', xlim=c(0,.3), xlab='Portfolio Standard Deviation', ylab='Portfolio Expected Return', col = 'black', ylim = c(.08, .13))
+    lines(S, E, col = "green", lwd = 1.5)
+    text(dataPorts, labels = c("Debt", "Equity"), cex = 1, pos = 2)
+
+## ggvis attempt -- all looks good except for overlapping legend.    
+##     effFront <- cbind(E,S, w.e)
+##     effFront <- data.frame(effFront)
+##     asset <- 0
+##     for(i in 1:dim(effFront)[1]){
+##         if(effFront$w.e[i] == 1){
+##         asset[i] = "Equity" 
+##     } else {
+##         if(effFront$w.e[i] == 0){
+##             asset[i] = "Debt" 
+##         } else {
+##             asset[i] = "Combined"
+##         }
+##     }
+##     }
+
+##     size.pt <- 0
+##     for(i in 1:dim(effFront)[1]){
+##         if(effFront$w.e[i] == 1){
+##         size.pt[i] = 5
+##     } else {
+##         if(effFront$w.e[i] == 0){
+##             size.pt[i] = 5 
+##         } else {
+##             size.pt[i] = 1
+##         }
+##     }
+##     }
+    
+## effFront <- cbind(effFront, asset, size.pt)
+## p <- effFront %>% ggvis(~S, ~E, size = ~size.pt) %>% layer_points(fill = ~factor(asset)) #%>% add_legend(c("fill", "size"))
+
+##     p %>% scale_numeric("size", domain = c("Equity", "Debt", "Combined"), range = c(7, 7, 1))
+})
+## f <- seq(-1, 1, by = .1)
+## S2 <- matrix(0, nrow=201, ncol=21)
+## for (i in 1:21){Sys.sleep(.5)
+##   S2[,i] <- sqrt((w.e^2)*s.e^2+(w.d^2)*s.d^2+2*w.d*w.e*s.e*s.d*f[i])
+##   lines(S2[,i], E, col=i, lwd=2)}
+#}}}
+```
+
+You can see if you set the coefficient to -1, then the efficient frontier has a point with no risk, and some expected return.  To calculate the expected return at that point, we first need to calculate the asset weights on the portfolio with no risk.
+
+#### Question:  Can the risk-free rate above be different from the risk-free rate on Treasury securities?  
+
+
+
+
+
+
+
+
+
+
+
+Testing for Portfolio Alpha
+========================================================
+
+
+
+```{r, message=FALSE,warning=FALSE, cache=TRUE}
+library(quantmod)
+env <- new.env()
+Symbols <- c('SPY', 'QQQ', 'XLF', 'TLT','IBM','AAPL','XOM','BP','DDD')
+getSymbols(Symbols = Symbols, env = env, from = '2013-01-01')
+args <- eapply(env = env, FUN = function(x){ClCl(x)})[Symbols]
+returns <- na.omit(do.call(what = merge, args = args))
+colnames(returns) <- Symbols
+
+## the basis for the code above is from the stackoverflow post here: (need to find and cite, note it might be quant.SE)
+
+srets <- as.matrix(returns)
+X <- cbind(1,srets[,1])
+alpha <- 0
+beta <- 0
+
+for (i in 1:dim(srets)[2]) {
+alpha[i] <- (solve(t(X) %*% X) %*% t(X) %*% srets[1:(dim(srets)[1]),i])[1]
+beta[i] <- (solve(t(X) %*% X) %*% t(X) %*% srets[1:(dim(srets)[1]),i])[2]}
+
+t.test(alpha)
+
+plot(density(alpha), main = "Empirical Density Function", xlab = "alpha")
+
+ab <- rbind(alpha,beta)
+
+ab <- as.data.frame(ab)
+
+names(ab) <- Symbols
+
+attach(ab)
+
+t.test(alpha[beta > 1],alpha[beta < 1])
+```
