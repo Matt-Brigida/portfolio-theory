@@ -44,7 +44,11 @@ renderPlot({
 
 Given a time series of returns, we can calculate arithmetic and geometric average returns.  Each type of average return (arithmetic vs geometric) is trying to answer a different question.
 
-Arithmetic returns
+#### Arithmetic average returns
+
+You may recall, if we are given a discrete probability density function which describes returns, we can calculate the expected, or average, return as $E(r) = \sum_{s=1}^N{p(s)r(s)}$ where $s$ denotes the state of the world, and $p(s)$ and $r(s)$ is the probability of that state, and the return in that state, respectively.
+
+When we switch to a time series of historical returns, we assign each return observation as equally likely.  So if there are $T$ returns, then each has probability $\frac{1}{T}$.  Therefore, 
 
 
 As a note, the geometric average is always less than or equal to the arithmetic average. The only case where the averages are equal is of all the returns being averaged are equal.  Can you prove this?  
