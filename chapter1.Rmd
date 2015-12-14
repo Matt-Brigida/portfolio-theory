@@ -28,7 +28,7 @@ Mosts texts in portfolio theory start with a chart of the rate of return on diff
 
 Note, throughout this text we'll generally quote returns on an annual basis.  This is important, because to compare returns between any two investments, we must look at the returns over the same length of time.  Beware anyone who quotes you their return over (particularly) longer peiods than a year, "I doubled my money in 10 years".  This is somewhat decieving because a 100\% return in 10 years is only 7.18\% per year.
 
-```{r riskReturnHistory, echo=FALSE}
+```{r riskReturnHistory, echo=FALSE, message = FALSE, warning = FALSE}
 library(shiny)
 library(dygraphs)
 library(quantmod)
@@ -44,11 +44,16 @@ renderPlot({
 
 Given a time series of returns, we can calculate arithmetic and geometric average returns.  Each type of average return (arithmetic vs geometric) is trying to answer a different question.
 
-#### Arithmetic average returns
+#### Arithmetic average:
 
 You may recall, if we are given a discrete probability density function which describes returns, we can calculate the expected, or average, return as $E(r) = \sum_{s=1}^N{p(s)r(s)}$ where $s$ denotes the state of the world, and $p(s)$ and $r(s)$ is the probability of that state, and the return in that state, respectively.
 
-When we switch to a time series of historical returns, we assign each return observation as equally likely.  So if there are $T$ returns, then each has probability $\frac{1}{T}$.  Therefore, 
+When we switch to a time series of historical returns, we assign each return observation as equally likely.  So if there are $T$ returns, then each has probability $\frac{1}{T}$.  Therefore, the arithmetic average return is:
+
+$\bar{r} = \frac{1}{T}\sum_{t = 1}^T{r_t}$
+
+#### Geometric average:
+
 
 
 As a note, the geometric average is always less than or equal to the arithmetic average. The only case where the averages are equal is of all the returns being averaged are equal.  Can you prove this?  
@@ -77,6 +82,10 @@ where the volatility is defined as the standard deviation of excess returns.
 <!---insert app which will calculate historical sharpe ratios?-->
 
 ### How good of an approximation is the normal distribution?
+
+The idea of the application below is that in what follows we'll assume that stock behaves according to the normal distribution (red dotted line).  The empirical distribution is how the stock actually behaved over the interval in which we calculated the stock's parameters (mean and standard deviation).
+
+Try different stocks and start dates.  You'll generally find small stocks over short time intervals have very non-normal empirical distributions.  However, often large stocks over long periods will have non-normal distributions as well.  The question is, given this evidence, why do we assume the normal distribution, and is it incorrect to do so?  
 
 ```{r comparetoNormal, echo=FALSE}
 ## compare normal and empirical distributions 
