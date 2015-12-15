@@ -52,7 +52,10 @@ When we switch to a time series of historical returns, we assign each return obs
 
 $\bar{r} = \frac{1}{T}\sum_{t = 1}^T{r_t}$
 
+The arithmetic average return may be interpreted as the return we expect if we were to choose one year's return at random.  Also, if we assume the future is like the past, then we can say, given no other information, it is the return we expect in any given future year.   
+
 #### Geometric average:
+
 
 
 
@@ -66,6 +69,23 @@ You may point out that what we have just done is not really compelling evidence.
 However, if the time series are ergodic, then averaging over time gives the same result as averaging over possible histories. The very interested student can see Hamilton's *Time Series Analysis*.  
 
 Later, however we'll also see theories which imply a similar risk/return relationship. This will lend credence to these earlier empirical observations.  
+
+### Real vs Nominal Rates
+
+In what follows we'll be mainly converned with nominal rates of return.  The *nominal* rate is the change in the amount of currency (US dollars) you have. Conversely, the *real* rate of return is the change in your purchasing power---the amount of stuff you can buy.  Since currency is only (1) a medium of exchange (for stuff) and a (2) store of value, we relly only care about our real rate of return.
+
+However, we can never really know what our real return was, because to calculate it we need the nominal rate and inflation.  We know the nominal rate with certainty, however we can only estimate what inflation was (or will be).  Therefore, there is some uncertainty as to the value of the real rate.  Below is a brief table highlighting some salient differences between the real and nominal rates. Note, $r$ is the real rate, $R$ the nominal, and $i$ denotes inflation. 
+
+|        | Real Rate | Nominal Rate |
+|--------|-----------|--------------|
+| Means  | Change in what you can buy| Change in dollars |
+| Certainty | We only estimate the real rate | We can observe the nominal rate |
+| Solved for: | $r = \frac{R -i}{1 + i}$ | $R = r + E(i)$ |
+| Taxes | Taxes are not paid on the real rate | Taxes are paid on the nominal rate |
+| As an investor | You are concerned with a high (risk-adjusted) after-tax real rate of return | Only relevant as it affects real rate |
+|    |     |      |
+
+
 
 ## Risk Premia
 
