@@ -17,33 +17,9 @@ Note, much of the R code in this text was written long ago, when I wrote even wo
 
 # Introduction
 
-Despite 'theory' in the title, this course will teach you how to construct portfolios in the real world.  In fact, some of the most interesting topics in this course will be on how to implement the theories we have learned.  
+Despite 'theory' in the title, this course will teach you how to construct portfolios in the real world.  We'll generally introduce a topic, learn the theoretical underpinnings, and then try to apply the topic to real data.  Some of the most interesting topics in this course will be on the implementation of the theories we have learned.  
 
 Through this course the student will gain a working knowledge of what we mean by the term *risk* in finance.  There will be differing measures of risk depending on the assumptions you make about the world.  Then, for a given set of assumptions, risk will directly determine portfolio allocations.  We'll also cover an extension of this, where the resulting portfolio allocations will imply an equilibrium expected return for each asset (the CAPM).  An apt alternative title for this course would be 'Risk and its Implications'. 
-
-
-## Risk and Return Over our History
-
-Mosts texts in portfolio theory start with a chart of the rate of return on different asset classes over time.  We'll be no different. However, take care to note the point of this exercise is simply to get an intuitive feel of the idea that taking more risk grants a higher return.
-
-Note, throughout this text we'll generally quote returns on an annual basis.  This is important, because to compare returns between any two investments, we must look at the returns over the same length of time.  Beware anyone who quotes you their return over (particularly) longer peiods than a year, "I doubled my money in 10 years".  This is somewhat decieving because a 100\% return in 10 years is only 7.18\% per year.
-
-```{r riskReturnHistory, echo=FALSE, message = FALSE, warning = FALSE, cache = FALSE, eval = FALSE}
-library(shiny)
-library(dygraphs)
-library(quantmod)
-renderPlot({
-
-    tenYr <- getSymbols('GS10', src = 'FRED')
-    threeMonth <- getSymbols('TB3MS', src = 'FRED')
-    moodysAAA <- getSymbols('AAA', src = 'FRED')
-    moodysBAA <- getSymbols('BAA', src = 'FRED')
-    djiaTo1968 <- getSymbols('M1109BUSM293NNBR', src = 'FRED')
-    
-
-
-})
-```
 
 ### Arithmetic versus Geometric Returns
 
@@ -95,6 +71,11 @@ However, we can never really know what our real return was, because to calculate
 ## Risk Premia
 
 ### The Standard Deviation
+
+
+
+
+
 
 ### The Sharpe Ratio
 
@@ -172,11 +153,39 @@ library(quantmod)
 ### Kurtosis
 
 
+## Risk and Return Over our History
+
+Most texts in portfolio theory contain a summary of the rate of return on different asset classes over time.  This is to show you different assets have different characteristics---on the whole assets with greater risk have higher long-term returns.  We'll be no different. However, take care to note the point of this exercise is simply to get an intuitive feel of the idea that taking more risk grants a higher return.
+
+Further, it can't be mentioned enough that ultimately it will be the covariance (correlation) between asset which will greatly affect the weight of the asset in our portfolio, and the expected return on that asset.  So take care to not how one asset behaves relative to another.  
+
+Note, throughout this text we'll generally quote returns on an annual basis.  This is important, because to compare returns between any two investments, we must look at the returns over the same length of time.  Beware anyone who quotes you their return over (particularly) longer peiods than a year, "I doubled my money in 10 years".  This is somewhat decieving because a 100\% return in 10 years is only 7.18\% per year.
+
+```{r riskReturnHistory, echo=FALSE, message = FALSE, warning = FALSE, cache = FALSE, eval = FALSE}
+library(shiny)
+library(dygraphs)
+library(quantmod)
+renderPlot({
+
+    tenYr <- getSymbols('GS10', src = 'FRED')
+    threeMonth <- getSymbols('TB3MS', src = 'FRED')
+    moodysAAA <- getSymbols('AAA', src = 'FRED')
+    moodysBAA <- getSymbols('BAA', src = 'FRED')
+    djiaTo1968 <- getSymbols('M1109BUSM293NNBR', src = 'FRED')
+    
+
+
+})
+```
+
 
 
 # Risk Measures
 
 ## Value at Risk (VaR)
+
+
+### Interactive VaR Application
 
 These functions output VaR estimates using both the historical empirical density function and a normal density (with a mean and standard deviation based on the historical data).  
 
@@ -222,7 +231,7 @@ cat("The VaR assuming a normal distribution is", quantile(rnorm(500000, mean=mea
 
 
 
-### Interactive VaR Application
+
 
 
 
