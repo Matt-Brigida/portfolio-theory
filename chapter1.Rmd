@@ -28,13 +28,18 @@ Mosts texts in portfolio theory start with a chart of the rate of return on diff
 
 Note, throughout this text we'll generally quote returns on an annual basis.  This is important, because to compare returns between any two investments, we must look at the returns over the same length of time.  Beware anyone who quotes you their return over (particularly) longer peiods than a year, "I doubled my money in 10 years".  This is somewhat decieving because a 100\% return in 10 years is only 7.18\% per year.
 
-```{r riskReturnHistory, echo=FALSE, message = FALSE, warning = FALSE}
+```{r riskReturnHistory, echo=FALSE, message = FALSE, warning = FALSE, cache = FALSE, eval = FALSE}
 library(shiny)
 library(dygraphs)
 library(quantmod)
 renderPlot({
 
-
+    tenYr <- getSymbols('GS10', src = 'FRED')
+    threeMonth <- getSymbols('TB3MS', src = 'FRED')
+    moodysAAA <- getSymbols('AAA', src = 'FRED')
+    moodysBAA <- getSymbols('BAA', src = 'FRED')
+    djiaTo1968 <- getSymbols('M1109BUSM293NNBR', src = 'FRED')
+    
 
 
 })
@@ -114,14 +119,15 @@ inputPanel(
   textInput("ticker1", "Stock Ticker", value = "GE"),
   dateInput("startDate1", "Start Date", value = "2015-01-01")
 )
-
+```
+```{r, echo = FALSE}
 renderPlot({
 library(tseries)
 library(quantmod)
   
     x <- get.hist.quote(input$ticker1, start = input$startDate1, quote = "Close")
     x <- xts(x)
-    r <- Delt(x, type = 'log')[-1]
+    r <<- Delt(x, type = 'log')[-1]
 
     plot(density(r), main = "Normal versus Empirical Distribution", lty = 1, 
         col = 1, lwd = 2, xlab = "Log-Returns in %/100") #, sub = "Matthew Brigida; Clarion UofP")
@@ -130,33 +136,94 @@ library(quantmod)
         lwd = 2)
 
     legend("topright", c("Stock Return Density", "Normal Density"), col = c(1, 2), 
-        lty = c(1, 4), lwd = c(2, 2))
-
-    # cat("The sample skewness is", skewness(r), "\n")
-    # cat("For a t-statistic of", skewness(r)/(sqrt(6/length(r))), "\n")
-    # p1 <- 2 * (1 - pt(abs(skewness(r)/(sqrt(6/length(r)))), length(r) - 1))
-    # cat("And a p-value of", p1, "\n")
-    # cat("So we", ifelse(p1 < 0.05, "reject the null, and find the distribution is skewed.", 
-    #     "do not reject the null, the distribution is symmetric."), "\n")
-    # cat("\n")
-    # 
-    # cat("The sample excess kurtosis is", kurtosis(r)[1], "\n")
-    # cat("For a t-statistic of", kurtosis(r)/(sqrt(24/length(r))), "\n")
-    # p2 <- 2 * (1 - pt(abs(kurtosis(r)/(sqrt(24/length(r)))), length(r) - 1))
-    # cat("And a p-value of", p2, "\n")
-    # cat("So we", ifelse(p2 < 0.05, "reject the null, and find the distribution has fat tails.", 
-    #     "do not reject the null, the distribution does not have fat tails."), 
-    #     "\n")
-    # cat("\n")
+           lty = c(1, 4), lwd = c(2, 2))
+})
+```
+```{r, echo = FALSE}
+    renderPrint({
+        null <- input$ticker1
+        null <- input$startDate1
+    cat("The sample skewness is", skewness(r), "\n")
+    cat("For a t-statistic of", skewness(r)/(sqrt(6/length(r))), "\n")
+    p1 <- 2 * (1 - pt(abs(skewness(r)/(sqrt(6/length(r)))), length(r) - 1))
+    cat("And a p-value of", p1, "\n")
+    cat("So we", ifelse(p1 < 0.05, "reject the null, and find the distribution is skewed.", 
+        "do not reject the null, the distribution is symmetric."), "\n")
+    cat("\n")
+    
+    cat("The sample excess kurtosis is", kurtosis(r)[1], "\n")
+    cat("For a t-statistic of", kurtosis(r)/(sqrt(24/length(r))), "\n")
+    p2 <- 2 * (1 - pt(abs(kurtosis(r)/(sqrt(24/length(r)))), length(r) - 1))
+    cat("And a p-value of", p2, "\n")
+    cat("So we", ifelse(p2 < 0.05, "reject the null, and find the distribution has fat tails.", 
+        "do not reject the null, the distribution does not have fat tails."), 
+        "\n")
+                                        cat("\n")
+        
 })    
 #}}}
 ```
 
 
-<br/>
-<br/>
-<br/>
-<br/>
+## Deviations from Normality
+
+### Skewness
+
+### Kurtosis
 
 
 
+
+# Risk Measures
+
+## Value at Risk (VaR)
+
+These functions output VaR estimates using both the historical empirical density function and a normal density (with a mean and standard deviation based on the historical data).  
+
+#### Using a 5\% VaR
+
+```{r var5, echo=FALSE}
+inputPanel(
+    textInput("tickerVar5", "Input a Stock Ticker", "XOM"),
+    dateInput("startDateVar5", "Start date:", value = "2015-01-01")
+)
+
+renderPrint({
+    library(fBasics)
+    library(tseries)
+    x <- get.hist.quote(input$tickerVar5, start = input$startDateVar5, quote="Close")
+x <- ts(x)
+r <- log(x[2:(length(x))]/x[1:(length(x)-1)])
+emp.var <- quantile(r, probs=0.05)*1000000
+cat("The empirical VaR is", emp.var, "\n")
+cat("The VaR assuming a normal distribution is", quantile(rnorm(500000, mean=mean(r), sd=sd(r)), probs=0.05)*1000000, "\n")
+})
+```
+
+#### Using a 1\% VaR
+
+```{r var1, echo = FALSE}
+inputPanel(
+    textInput("tickerVar1", "Input a Stock Ticker", "XOM"),
+    dateInput("startDateVar1", "Start date:", value = "2015-01-01")
+)
+
+renderPrint({
+    library(fBasics)
+    library(tseries)
+    x <- get.hist.quote(input$tickerVar1, start = input$startDateVar1, quote="Close")
+x <- ts(x)
+r <- log(x[2:(length(x))]/x[1:(length(x)-1)])
+emp.var <- quantile(r, probs=0.01)*1000000
+cat("The empirical VaR is", emp.var, "\n")
+cat("The VaR assuming a normal distribution is", quantile(rnorm(500000, mean=mean(r), sd=sd(r)), probs=0.01)*1000000, "\n")
+})
+```
+
+
+
+### Interactive VaR Application
+
+
+
+## Contitional Tail Expectation
