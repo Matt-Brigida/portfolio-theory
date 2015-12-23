@@ -37,8 +37,11 @@ The arithmetic average return may be interpreted as the return we expect if we w
 
 #### Geometric average:
 
+The geometric average (denote by $GA$) return is:
 
+$GA = \left(\prod_{t=1}^T(1 + r_t)\right)^{\frac{1}{T}} - 1$
 
+In other words, add 1 to each return, multiply all the returns together, and take the $T$th root of the product of the returns.  Then subtract 1, and you have the geometric average.  The geometric average can be interpreted as the average return per period you expect to earn over a set period.  
 
 As a note, the geometric average is always less than or equal to the arithmetic average. The only case where the averages are equal is of all the returns being averaged are equal.  Can you prove this?  
 
@@ -68,9 +71,13 @@ However, we can never really know what our real return was, because to calculate
 
 
 
-## Risk Premia
 
-### The Standard Deviation
+### Risk Premia
+
+An assets risk premium is the reward you expect to earn for bearing risk.  We can express the risk premium as $E(r) - r_f$ where $E(r)$ is the expected return on a risky asset, and $r_f$ is the risk free rate.  Understanding risk premia will be a central part of this course.
+
+### The Standard Deviation and Variance
+
 
 
 
