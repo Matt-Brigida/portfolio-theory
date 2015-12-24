@@ -78,6 +78,18 @@ An assets risk premium is the reward you expect to earn for bearing risk.  We ca
 
 ### The Standard Deviation and Variance
 
+A random variable's (here returns) variance is its expected squared deviation from its mean.  Given a discrete distribution which describes returns we then have:
+
+$\sigma^2 = \sum_{s=1}^Sp_s(r_s - E(r))^2$
+
+where $\sigma^2$ denotes the variance, and $r_s$ and $p_s$ denote the return in state $s$, and the probability of state $s$ respectively.  If we were instead to assume a continuous probability density function (such as the normal distribution), then the variance would be:
+
+$\sigma^2 = \int {(r - E(r))^2f(r)dr}$
+
+This is more simple than it looks.  $f(r)dr$ is the same rectangle as $p_s$ in the discrete version.  The only different is $f(r)dr$ is in the limit where the base of the rectangle gets smaller and smaller.  Note, you won't need to know the distinctions between the descrete and continuous cases for what follows---I just thought you should see both equations in case they come up in some context later.
+
+In the cast of historical data, with $T$ observations, the variance is:
+
 
 
 
