@@ -90,11 +90,15 @@ This is more simple than it looks.  $f(r)dr$ is the same rectangle as $p_s$ in t
 
 In the cast of historical data, with $T$ observations, the variance is:
 
+$\hat{\sigma}^2 = \frac{1}{T-1}\sum_{t=1}^T(r_s - \bar{r})^2$
 
+where each period's deviation from the mean is given equal weight ($\frac{1}{T-1}$).  We divide by $\frac{1}{T-1}$ instead of $\frac{1}{T}$ to adjust for the one degree of freedom we lose in calculating the mean.
 
+Since the variance is the average *squared* deviations, the value is not in the units of the variable for which we are calculating the variance.  In other words, when we calculate the variance of a stock's percent returns, the result is not in percent returns.
 
+To return to our original units (percent returns) we take the square root of the variance.  The positive square root of the variance is the *standard deviation*.  This is in the original units---percent returns.  
 
-
+$\hat{\sigma} = \sqrt{\frac{1}{T-1}\sum_{t=1}^T(r_s - \bar{r})^2}$
 
 ### The Sharpe Ratio
 
@@ -104,7 +108,7 @@ $Sharpe\ Ratio=\frac{Risk\ Premium}{Volatility}$
 
 where the volatility is defined as the standard deviation of excess returns.
 
-<!---insert app which will calculate historical sharpe ratios?-->
+<!---insert app which will calculate historical average return, variance, standard deviation, skewness, kurtosis, and sharpe ratios-->
 
 ### How good of an approximation is the normal distribution?
 
