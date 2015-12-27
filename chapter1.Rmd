@@ -80,7 +80,7 @@ An assets risk premium is the reward you expect to earn for bearing risk.  We ca
 
 A random variable's (here returns) variance is its expected squared deviation from its mean.  Given a discrete distribution which describes returns we then have:
 
-$\sigma^2 = \sum_{s=1}^Sp_s(r_s - E(r))^2$
+$\sigma^2 = \sum_{s=1}^Sp_s(r_t - E(r))^2$
 
 where $\sigma^2$ denotes the variance, and $r_s$ and $p_s$ denote the return in state $s$, and the probability of state $s$ respectively.  If we were instead to assume a continuous probability density function (such as the normal distribution), then the variance would be:
 
@@ -90,7 +90,7 @@ This is more simple than it looks.  $f(r)dr$ is the same rectangle as $p_s$ in t
 
 In the cast of historical data, with $T$ observations, the variance is:
 
-$\hat{\sigma}^2 = \frac{1}{T-1}\sum_{t=1}^T(r_s - \bar{r})^2$
+$\hat{\sigma}^2 = \frac{1}{T-1}\sum_{t=1}^T(r_t - \bar{r})^2$
 
 where each period's deviation from the mean is given equal weight ($\frac{1}{T-1}$).  We divide by $\frac{1}{T-1}$ instead of $\frac{1}{T}$ to adjust for the one degree of freedom we lose in calculating the mean.
 
@@ -109,6 +109,20 @@ $Sharpe\ Ratio=\frac{Risk\ Premium}{Volatility}$
 where the volatility is defined as the standard deviation of excess returns.
 
 <!---insert app which will calculate historical average return, variance, standard deviation, skewness, kurtosis, and sharpe ratios-->
+
+## The Normal Distribution
+
+Very often in finance we assume returns are normally distributed.  This assumtion means, given a mean and variance, the distribution is completely determined.  That is, is an asset's returns are assumed normal, then all we need to fully describe the asset is its mean and variance.  This effectively assumes the values of [higher moments](https://en.wikipedia.org/wiki/Moment_\(mathematics\)#Higher_moments) (such as skewness and kurtosis).  
+
+If we assume a normal distribution, then we can use the standard deviation as a measure of risk.  When we refer to risk, we mean the probability of *loss*---the left tail of the return distribution.  These are the returns below zero (or some benchmark).  However, since the normal distribution is symmetric, the left and right tails are the same.  So it doesn't matter that the standard deviation is averaging both the deviations above and below the mean.  If the distribution is not symmetric, then the deviations below the mean may be quite different from the deviations above the mean, and the standard deviation makes little sense as a measure of risk.  
+
+Also, the normal distribution has the useful feature that the [sum of normally distributed random variables is also normally distributed](https://en.wikipedia.org/wiki/Sum_of_normally_distributed_random_variables).  Note, also a [constant times a normal distribution is normally distributed](http://math.stackexchange.com/questions/275648/multiplication-of-a-random-variable-with-constant).  This means when we calculate a portfolio's return it will also be normally distributed if we assume each asset in the portfolio is normally distributed.  Note, the portfolio return is the sum of the return on each asset times its weight in the portfolio, but more on that later.
+
+## Deviations from Normality
+
+### Skewness
+
+### Kurtosis
 
 ### How good of an approximation is the normal distribution?
 
@@ -144,7 +158,9 @@ library(quantmod)
 })
 ```
 ```{r, echo = FALSE}
-    renderPrint({
+library(tseries)
+
+renderPrint({
         null <- input$ticker1
         null <- input$startDate1
     cat("The sample skewness is", skewness(r), "\n")
@@ -167,13 +183,6 @@ library(quantmod)
 })    
 #}}}
 ```
-
-
-## Deviations from Normality
-
-### Skewness
-
-### Kurtosis
 
 
 ## Risk and Return Over our History
