@@ -56,7 +56,7 @@ Later, however we'll also see theories which imply a similar risk/return relatio
 
 ### Real vs Nominal Rates
 
-In what follows we'll be mainly converned with nominal rates of return.  The *nominal* rate is the change in the amount of currency (US dollars) you have. Conversely, the *real* rate of return is the change in your purchasing power---the amount of stuff you can buy.  Since currency is only (1) a medium of exchange (for stuff) and a (2) store of value, we relly only care about our real rate of return.
+In what follows we'll be mainly concerned with nominal rates of return.  The *nominal* rate is the change in the amount of currency (US dollars) you have. Conversely, the *real* rate of return is the change in your purchasing power---the amount of stuff you can buy.  Since currency is only (1) a medium of exchange (for stuff) and a (2) store of value, we really only care about our real rate of return.
 
 However, we can never really know what our real return was, because to calculate it we need the nominal rate and inflation.  We know the nominal rate with certainty, however we can only estimate what inflation was (or will be).  Therefore, there is some uncertainty as to the value of the real rate.  Below is a brief table highlighting some salient differences between the real and nominal rates. Note, $r$ is the real rate, $R$ the nominal, and $i$ denotes inflation. 
 
@@ -86,7 +86,7 @@ where $\sigma^2$ denotes the variance, and $r_s$ and $p_s$ denote the return in 
 
 $\sigma^2 = \int {(r - E(r))^2f(r)dr}$
 
-This is more simple than it looks.  $f(r)dr$ is the same rectangle as $p_s$ in the discrete version.  The only different is $f(r)dr$ is in the limit where the base of the rectangle gets smaller and smaller.  Note, you won't need to know the distinctions between the descrete and continuous cases for what follows---I just thought you should see both equations in case they come up in some context later.
+This is more simple than it looks.  $f(r)dr$ is the same rectangle as $p_s$ in the discrete version.  The only different is $f(r)dr$ is in the limit where the base of the rectangle gets smaller and smaller.  Note, you won't need to know the distinctions between the discrete and continuous cases for what follows---I just thought you should see both equations in case they come up in some context later.
 
 In the cast of historical data, with $T$ observations, the variance is:
 
@@ -112,7 +112,7 @@ where the volatility is defined as the standard deviation of excess returns.
 
 ## The Normal Distribution
 
-Very often in finance we assume returns are normally distributed.  This assumtion means, given a mean and variance, the distribution is completely determined.  That is, is an asset's returns are assumed normal, then all we need to fully describe the asset is its mean and variance.  This effectively assumes the values of [higher moments](https://en.wikipedia.org/wiki/Moment_\(mathematics\)#Higher_moments) (such as skewness and kurtosis).  
+Very often in finance we assume returns are normally distributed.  This assumption means, given a mean and variance, the distribution is completely determined.  That is, is an asset's returns are assumed normal, then all we need to fully describe the asset is its mean and variance.  This effectively assumes the values of [higher moments](https://en.wikipedia.org/wiki/Moment_\(mathematics\)#Higher_moments) (such as skewness and kurtosis).  
 
 If we assume a normal distribution, then we can use the standard deviation as a measure of risk.  When we refer to risk, we mean the probability of *loss*---the left tail of the return distribution.  These are the returns below zero (or some benchmark).  However, since the normal distribution is symmetric, the left and right tails are the same.  So it doesn't matter that the standard deviation is averaging both the deviations above and below the mean.  If the distribution is not symmetric, then the deviations below the mean may be quite different from the deviations above the mean, and the standard deviation makes little sense as a measure of risk.  
 
@@ -120,7 +120,14 @@ Also, the normal distribution has the useful feature that the [sum of normally d
 
 ## Deviations from Normality
 
+Assuming asset returns is convenient, however is it plausible?  Moreover, in what ways can assets returns differ from the normal distribution?  Below are interactive applications which will allow you to investigate these questions yourself.  Before you do, however, we'll take a brief look at ways in which returns may deviation from normality.
+
 ### Skewness
+
+Skewness is a measure of asymmetry in the distribution.  Positively skewed assets have long tails in the direction of positive returns, and the opposite for negatively skewed assets. As mentioned earlier, symmetric measures of risk such as the standard deviation are less relevant if the distribution is very skewed on either direction.
+
+There is ample evidence that asset return distributions are skewed, particularly for individual assets as opposed portfolios.  Some of this evidence points to risk-takers actively seeking out and buying positively skewed stocks. 
+
 
 ### Kurtosis
 
@@ -191,7 +198,7 @@ Most texts in portfolio theory contain a summary of the rate of return on differ
 
 Further, it can't be mentioned enough that ultimately it will be the covariance (correlation) between asset which will greatly affect the weight of the asset in our portfolio, and the expected return on that asset.  So take care to not how one asset behaves relative to another.  
 
-Note, throughout this text we'll generally quote returns on an annual basis.  This is important, because to compare returns between any two investments, we must look at the returns over the same length of time.  Beware anyone who quotes you their return over (particularly) longer peiods than a year, "I doubled my money in 10 years".  This is somewhat decieving because a 100\% return in 10 years is only 7.18\% per year.
+Note, throughout this text we'll generally quote returns on an annual basis.  This is important, because to compare returns between any two investments, we must look at the returns over the same length of time.  Beware anyone who quotes you their return over (particularly) longer periods than a year, "I doubled my money in 10 years".  This is somewhat deceiving because a 100\% return in 10 years is only 7.18\% per year.
 
 ```{r riskReturnHistory, echo=FALSE, message = FALSE, warning = FALSE, cache = FALSE, eval = FALSE}
 library(shiny)
