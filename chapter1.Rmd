@@ -70,8 +70,6 @@ However, we can never really know what our real return was, because to calculate
 |    |     |      |
 
 
-
-
 ### Risk Premia
 
 An assets risk premium is the reward you expect to earn for bearing risk.  We can express the risk premium as $E(r) - r_f$ where $E(r)$ is the expected return on a risky asset, and $r_f$ is the risk free rate.  Understanding risk premia will be a central part of this course.
@@ -124,12 +122,17 @@ Assuming asset returns is convenient, however is it plausible?  Moreover, in wha
 
 ### Skewness
 
-Skewness is a measure of asymmetry in the distribution.  Positively skewed assets have long tails in the direction of positive returns, and the opposite for negatively skewed assets. As mentioned earlier, symmetric measures of risk such as the standard deviation are less relevant if the distribution is very skewed on either direction.
+Skewness is a measure of asymmetry in the distribution.  It is $\frac{E[(r - E(r))^3]}{E([(r - E(r))^2])^{3/2}}$.  It is not important to remember this necessarily, however do note that the deviation af the asset return from its mean is raised to the power of 3, which retains the sign of the deviation.  In other words gains and losses are treated differently.
 
-There is ample evidence that asset return distributions are skewed, particularly for individual assets as opposed portfolios.  Some of this evidence points to risk-takers actively seeking out and buying positively skewed stocks. 
+Positively skewed assets have long tails in the direction of positive returns, and the opposite for negatively skewed assets. As mentioned earlier, symmetric measures of risk such as the standard deviation are less relevant if the distribution is very skewed on either direction.
 
+There is ample evidence that asset return distributions are skewed, particularly for individual assets as opposed to portfolios.  Some of this evidence points to [risk-takers actively seeking out and buying positively skewed stocks](https://scholar.google.com/scholar?cluster=3640748709756050519&hl=en&as_sdt=0,39). Conversely, negatively skewed assets would want to be avoided (unless of course if you intend to short).
 
 ### Kurtosis
+
+Kurtosis is a measure of the fatness of the tails of a distribution---how likely there are to be outlier events. It is $\frac{E[(r - E(r))^2]}{E([(r - E(r))^2])^2}$.  Again, remembering this is not important, but notice the assets deviation from its expected value is squared.  So we lost the sign of the deviation.  Gains and losses are treated the same.
+
+The normal distribution has a kurtosis of three, so often people will quote the *excess* kurtosis, which is the calculated kurtosis less three.  It is worthwhile to remember that when using a built-in function to calculate kurtosis, some software will return the kurtosis, and some will return the excess kurtosis.  Be sure to read the appropriate documentation before using the function.
 
 ### How good of an approximation is the normal distribution?
 
@@ -192,6 +195,7 @@ renderPrint({
 ```
 
 
+<!--- commented until done
 ## Risk and Return Over our History
 
 Most texts in portfolio theory contain a summary of the rate of return on different asset classes over time.  This is to show you different assets have different characteristics---on the whole assets with greater risk have higher long-term returns.  We'll be no different. However, take care to note the point of this exercise is simply to get an intuitive feel of the idea that taking more risk grants a higher return.
@@ -216,17 +220,29 @@ renderPlot({
 
 })
 ```
-
-
+-->
 
 # Risk Measures
 
+A very active area of research in finance concerns ways to evaluate and express risk.  The student should know, and be encouraged, by the fact that there is still a great deal of contributions that can be made in here.  We'll briefly discuss the main measure, VaR.  There are some other measures, such as Conditional Tail Expectation which the interested reader may want to consider.  
+
 ## Value at Risk (VaR)
 
+VaR is stated:  $VaR_\alpha = inf\{x \in \mathbb{R} : P(L > x) \leq 1 - \alpha\}$, where $\alpha$ is the confidence level (such as 95\% or 99\%), and $L$ is some loss.  In words this reads the smallest real number $x$ such that the probability that the loss is greater than $x$ is less than 1\% (or 5\% depending on the confidence level).
+
+So say we are using a 99\% confidence level, and we are using daily data, and we find $x = \$500,000$.  Then we can state this like, `There is a 1\% or less chance on any given day that we will lose more than \$500,000'.   
+
+This measure of risk makes sense, and accordingly has been written into regulations concerning levels of risk banks may take. However, the difficulty is in its implementation.  We need some way to describe $P(L > x)$.  We can assume a normal distribution, or any other we would like. In addition to this assumption, we have to come up with the distribution's parameters (such as mean and variance).  Do we use historical data, or a other forecasting method?  Or we can use historical quantiles or empirical density functions.  In this fashion we *only* use history, without any assumption of a distribution.
+
+None of these methods are satisfactory.  Using historical data assumes the future is like the past.  This is why it is often said VaR works until you need it to work---in a market crash the future is distinctly unlike the past.  We could try and forecast the future, but no one has been able to do this well and consistently. Assuming a normal distribution, whether we use parameters based on historical data or forecasts, is really the least of the problems with implementing VaR (or other risk measures).  
+
+One of the largest benefits of using something like VaR is simply that it forces you to think about your exposures to different risks.  In practice it gives a structure to your risk management thought process.  Also, note, a VaR calculation is not simply done once, but rather is an iterative procedure.  You calculate your VaR, improve assumptions, measures, and adjust for changing market conditions, and recalculate. 
 
 ### Interactive VaR Application
 
-These functions output VaR estimates using both the historical empirical density function and a normal density (with a mean and standard deviation based on the historical data).  
+These functions output VaR estimates using both the historical empirical density function and a normal density (with a mean and standard deviation based on the historical data).  They both assume you have \$1 million invested in the asset. 
+
+Enter a ticker and see the resulting 1\% and 5\% VaR be using both a normal distribution and [empirical density function](https://en.wikipedia.org/wiki/Empirical_distribution_function).  Note VaR makes more sense with respect to a portfolio, so try some [ETFs](https://en.wikipedia.org/wiki/Exchange-traded_fund) like SPY and EWZ.  
 
 #### Using a 5\% VaR
 
@@ -268,10 +284,5 @@ cat("The VaR assuming a normal distribution is", quantile(rnorm(500000, mean=mea
 })
 ```
 
+<!-- end -->
 
-
-
-
-
-
-## Contitional Tail Expectation
