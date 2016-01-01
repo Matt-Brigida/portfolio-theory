@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 <!---
 Note, much of the R code in this text was written long ago, when I wrote even worse R code than I do now.  The code works, but it is inefficient and ugly.  I decided not to rewrite it however, feeling it more important to get the text out and into students' hands.  If you can improve the code, please feel free.  Pull requests are always welcome.
 -->
-
+*The text and code for this book is [hosted on GitHub](https://github.com/Matt-Brigida/portfolio-theory).  If you have improvements, please feel free to fork the repo and issue pull requests.*
 
 # Introduction
 
@@ -46,13 +46,6 @@ In other words, add 1 to each return, multiply all the returns together, and tak
 As a note, the geometric average is always less than or equal to the arithmetic average. The only case where the averages are equal is of all the returns being averaged are equal.  Can you prove this?  
 
 
-### A Brief Note on Ergodicity 
-
-You may point out that what we have just done is not really compelling evidence. We have looked at an historical sample of size 1, and implied that this must hold.  In fact, to make any sort of statement about the empirical relationship between risk and return we would need to sample many times from all possible histories, and then average over these histories.  Of course, we can only ever observe one history---an important distinction from empirical results in disciplines such as physics and chemistry.
-
-However, if the time series are ergodic, then averaging over time gives the same result as averaging over possible histories. The very interested student can see Hamilton's *Time Series Analysis*.  
-
-Later, however we'll also see theories which imply a similar risk/return relationship. This will lend credence to these earlier empirical observations.  
 
 ### Real vs Nominal Rates
 
@@ -220,6 +213,15 @@ renderPlot({
 
 })
 ```
+
+### A Brief Note on Ergodicity 
+
+You may point out that what we have just done is not really compelling evidence. We have looked at an historical sample of size 1, and implied that this must hold.  In fact, to make any sort of statement about the empirical relationship between risk and return we would need to sample many times from all possible histories, and then average over these histories.  Of course, we can only ever observe one history---an important distinction from empirical results in disciplines such as physics and chemistry.
+
+However, if the time series are ergodic, then averaging over time gives the same result as averaging over possible histories. The very interested student can see Hamilton's *Time Series Analysis*.  
+
+Later, however we'll also see theories which imply a similar risk/return relationship. This will lend credence to these earlier empirical observations.  
+
 -->
 
 # Risk Measures
