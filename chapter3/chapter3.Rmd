@@ -1,5 +1,5 @@
 ---
-title: "Portfolio Theory: Chapter 2"
+title: "Portfolio Theory: Chapter 3"
 author: "Matt Brigida"
 date: "November 27, 2015"
 output: html_document

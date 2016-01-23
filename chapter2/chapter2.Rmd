@@ -1,0 +1,52 @@
+---
+title: "Portfolio Theory: Chapter 2"
+author: "Matt Brigida"
+date: "November 27, 2015"
+output: html_document
+runtime: shiny
+---
+
+In this chapter we decide the proportions of our portfolio which we will invest in the risky vs risk free asset.  It may seem odd to simply assume we have two assets in which we'll invest (risky and risk-free) and try and decide the proportions in each.  Why this decision is relevant comes from the next chapter where we construct optimal risky portfolios.
+
+The idea of modern investing is that, because the construction of optimal *risky* portfolios is not dependent on each investors' risk aversion, the construction of risky portfolios can be delegated to professionals.  
+
+
+Because the proportions in your complete portfolio will be a function of your degree of risk aversion, we'll start with a discussion on terms and our assumptions regarding our behavior towards risk.
+
+## Risk Aversion
+
+We can classify preferences toward risk into three categories: risk averse; risk neutral; risk seeking. 
+
+| Category |  Description | Type of Person |
+|----------|-----|--------|
+| Risk Averse | Rational behavior which only takes on risk for increase expected return. | Investors/Speculators |
+| Risk Neutral |  Risk is treated as irrelevant. Assumption often used in academic analyses. | |
+| Risk Seeking | Prefers increased risk even if there is no increased expected return. | Gamblers | 
+
+We assume throughout the text that investors are risk averse.  This is an assumption made by the models which make up the basis of portfolio theory---namely Markowitz optimal portfolios and the Capital Asset Pricing Model. 
+
+## Utility Values
+
+So when evaluating a possible investment, an investor prefers the investment the higher its expected return is relative to its risk. Consider the following two investments (say A and B): 
+
+| Investment | Expected Return | Standard Deviation |
+|-----|------|------|
+| A | 10\% | 20\% |
+| B | 10\% | 30\% |
+
+It is easy to see a risk averse investor will choose A.  However what if the investor were confronted with the choice between the following two investments (say C and D):
+
+| Investment | Expected Return | Standard Deviation |
+|-----|------|------|
+| C | 10\% | 20\% |
+| D | 18\% | 30\% |
+
+Now it isn't clear which investment the investor would choose.  Is an additional 8\% expected return worth the increased risk? Maybe and maybe not.  Two risk averse investors could disagree.  We need a systematic way for an investor to rank investments.  For this we use `utility functions'. 
+
+## Utility Functions
+
+We use utility functions to map from the mean/variance space to a number with which we can rank portfolios (higher values are preferred).  We'll use the following utility function:
+
+$U = E(r_X) - \frac{1}{2}A\sigma^2$
+
+$A$ is the degreee of risk aversion, and it is particular to each individual.  Thus different investors will have different utility values for the same portfolio.  Note the utility value $U$ is increasing in expected return $E(r)$ and decreasing in risk $\sigma$.  
