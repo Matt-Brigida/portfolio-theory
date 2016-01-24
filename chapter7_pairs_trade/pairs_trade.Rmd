@@ -1,0 +1,11 @@
+---
+title: "Portfolio Theory: Chapter 7 (The Pairs Trade)"
+author: "Matt Brigida"
+date: "November 27, 2015"
+output: html_document
+runtime: shiny
+---
+
+The pairs trade is a classic example of a statistical arbitrage (stat arb) strategy---its history dates back to the 1980s.  
+
+This stragegy can be thought of as the oppposite of Markowitz mean/variance optimization.  In Markowitz we diversified efficiently, which reduces firsm specific risk but leaves market risk in our portfolio.  In the pairs trade, we'll remove market risk, and hold only firm-specific risk. Thus, the pairs trade is known as a 'market-neutral' strategy. 
