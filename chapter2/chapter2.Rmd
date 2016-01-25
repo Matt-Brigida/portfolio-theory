@@ -49,4 +49,10 @@ We use utility functions to map from the mean/variance space to a number with wh
 
 $U = E(r_X) - \frac{1}{2}A\sigma^2$
 
-$A$ is the degreee of risk aversion, and it is particular to each individual.  Thus different investors will have different utility values for the same portfolio.  Note the utility value $U$ is increasing in expected return $E(r)$ and decreasing in risk $\sigma$.  
+$A$ is the degree of risk aversion, and it is particular to each individual.  Thus different investors will have different utility values for the same portfolio.  Note the utility value $U$ is increasing in expected return $E(r)$ and decreasing in risk $\sigma$.
+
+So, say an investor has a degree of risk aversion of 3, and a portfolio has an expected return and standard deviation of 10\% and 17\% respectively.  Then the investor's utility value for the portfolio is: $U = 10\% - \frac{3}{2}(17\%)^2 = 5.67\%$.
+
+### Certainty Equivalence
+
+
