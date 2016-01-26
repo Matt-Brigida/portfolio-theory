@@ -53,6 +53,8 @@ $A$ is the degree of risk aversion, and it is particular to each individual.  Th
 
 So, say an investor has a degree of risk aversion of 3, and a portfolio has an expected return and standard deviation of 10\% and 17\% respectively.  Then the investor's utility value for the portfolio is: $U = 10\% - \frac{3}{2}(17\%)^2 = 5.67\%$.
 
+Note, we can find all $(E(r), \sigma)$ pairs such that their utility values are equivalent.  This pairs create *indifference curves* in $(E(r), \sigma)$.  The idea is we don't care where we are on this curve; all points provide us with the same worth.
+
 ### Certainty Equivalence
 
-
+The utility value is the 
