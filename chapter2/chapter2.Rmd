@@ -17,8 +17,8 @@ Because the proportions in your complete portfolio will be a function of your de
 
 We can classify preferences toward risk into three categories: risk averse; risk neutral; risk seeking. 
 
-| Category |  Description | Type of Person |
-|----------|-----|--------|
+| Category |  Description          | Type of Person |
+|----------|-----------------|-----------------|
 | Risk Averse | Rational behavior which only takes on risk for increase expected return. | Investors/Speculators |
 | Risk Neutral |  Risk is treated as irrelevant. Assumption often used in academic analyses. | |
 | Risk Seeking | Prefers increased risk even if there is no increased expected return. | Gamblers | 
@@ -53,8 +53,87 @@ $A$ is the degree of risk aversion, and it is particular to each individual.  Th
 
 So, say an investor has a degree of risk aversion of 3, and a portfolio has an expected return and standard deviation of 10\% and 17\% respectively.  Then the investor's utility value for the portfolio is: $U = 10\% - \frac{3}{2}(17\%)^2 = 5.67\%$.
 
+
+```{r calculateUtility, echo=FALSE}
+inputPanel(
+  sliderInput("expRet", "Expected Return", min = -.2, max = 1, value = .15),
+  sliderInput("stDev", "Standard Deviation", min = .01, max = 1, value = .2),
+  sliderInput("RA", "Degree of Risk Aversion", min = -.5, max = 6, value = 4)
+)
+renderPrint({
+  U = input$expRet - 0.5 * input$RA * input$stDev^2
+  out <- paste(round(U * 100, 2), "%", sep = "")
+  cat(out)
+})
+```
+
+
 Note, we can find all $(E(r), \sigma)$ pairs such that their utility values are equivalent.  This pairs create *indifference curves* in $(E(r), \sigma)$.  The idea is we don't care where we are on this curve; all points provide us with the same worth.
+
+```{r indifferenceCurves, echo=FALSE}
+## change to a htmlwidget ----
+inputPanel(
+  sliderInput("utility", "Utility Value", min = .01, max = 1, value = .08),
+  sliderInput("RA1", "Degree of Risk Aversion", min = -.5, max = 6, value = 2)
+)
+renderPlot({
+  ## for each standard deviation, find the expected return which solves for the utility value
+  expRet1 <- 0
+  index <- seq(.01, 1, by = .01)
+ for (i in seq_along(index)) {
+  fun <- function(X){ ((X - 0.5 * input$RA1 * index[i]^2) - input$utility)^2 }
+  expRet1[i] <- optim(.1, fun, method = "Brent", lower = -1, upper = 5)$par
+ }
+  plot(index, expRet1, type = 'l', xlab = "Standard Deviaion", ylab = "Expected Return", lwd = 4, col = 3)
+  legend("topleft", legend = paste("Utility = ",input$utility, sep = ""), col = 3, lty = 1, lwd = 4)
+})
+```
 
 ### Certainty Equivalence
 
-The utility value is the 
+The utility value is the risk-free rate of return such that we are indifferent between the risky and risk free portfolio.  For example, consider again an investor has a degree of risk aversion of 3, and a portfolio has an expected return and standard deviation of 10\% and 17\% respectively.  The investor's utility value for the portfolio is 5.67\%.  What this means is the investor is indifferent between earning 5.67\% risk free, or investing in a portfolio with a 10\% expected return and 17\% standard deviation. 
+
+So the utility function converts all risky portfolios into thier risk-free counterpart.  This is why we can compare portfolios by their utility value---the utility function adjusts each portfolio for its risk and puts them all on the same scale.  Since the utility value of the risk-free portfolio is simply the risk-free rate, we can also say we'll only consider investing in a risky portfolio if the portfolio's utility value (certainty-equavalent rate) is above the risk-free rate.
+
+# A Portfolio of One Risky and One Risk-Free Asset
+
+Here we assume we already know our optimal risky portfolio, and we are trying to decide how much to invest in this portfolio versus the risk free asset.  Our result is going to be dependent on our particular degree of risk aversion, and therefore each investor will have their own solution.  The construction of the optimal risky portfolio, in the next chapter, will be not be dependent on risk aversion.
+
+The return on an investor's complete portfolio (risky and risk free asset) is:
+
+$r_c = yr_r + (1-y)r_f$
+
+where $r_c$, $r_r$, and $r_f$ are the returns on the complete, risky, and risk free assets respectively.  $y$ is the proportion of your portfolio in the risk-free asset (it can, in general, be negative or greater than 1).  
+
+#### Expected return of the complete portfolio
+
+Taking the expectation and rearranging affords:
+
+$E(r_c) = r_f + y[E(r_r) - r_f]$
+
+So your expected return on your complete portfolio is the risk-free rate plus the product of the risk premium on the risky asset and the proportion you invested in the risky asset.  Note, since investors are assumes risk averse, we know $E(r_r) - r_f > 0$.
+
+#### Standard deviation of the complete portfolio
+
+Noting that the risk-free rate is a constant, the variance if the complete portfolio is $\sigma_c^2 = y^2\sigma_r^2$.  So the standard deviation is $\sigma_c = y\sigma_r$
+
+#### Plotting the complete portfolio
+
+We can rearrange the standard deviation to show $y = \frac{\sigma_c}{\sigma_r}$.  Plugging this in to our equation for the expected return of the complete portfolio yields:
+
+$E(r_c) = r_f + \sigma_c\frac{E(r_r) - r_f}{\sigma_r}$
+
+This allows us to plot our possible $E(r_c)$ and $\sigma_c$ combinations (our investment opportunity set).  
+
+```{r opportunitySet, echo=FALSE}
+## change to a htmlwidget ----
+inputPanel(
+  sliderInput("riskfree2", "Risk-Free Rate", min = .01, max = .2, value = .02),
+  sliderInput("expRet2", "Expected Return on Risky Portfolio", min = .01, max = .6, value = .08),
+  sliderInput("stDev2", "Standard Deviation on Risky Portfolio", min = .01, max = .6, value = .14)
+)
+renderPlot({
+  plot(index, expRet1, type = 'l', xlab = "Standard Deviaion", ylab = "Expected Return", lwd = 4, col = 3)
+  legend("topleft", legend = paste("Utility = ",input$utility, sep = ""), col = 3, lty = 1, lwd = 4)
+})
+```
