@@ -129,11 +129,17 @@ This allows us to plot our possible $E(r_c)$ and $\sigma_c$ combinations (our in
 ## change to a htmlwidget ----
 inputPanel(
   sliderInput("riskfree2", "Risk-Free Rate", min = .01, max = .2, value = .02),
+  sliderInput("borrow", "Borrowing (Margin) Rate", min = .01, max = .2, value = .05),
   sliderInput("expRet2", "Expected Return on Risky Portfolio", min = .01, max = .6, value = .08),
   sliderInput("stDev2", "Standard Deviation on Risky Portfolio", min = .01, max = .6, value = .14)
 )
 renderPlot({
-  plot(index, expRet1, type = 'l', xlab = "Standard Deviaion", ylab = "Expected Return", lwd = 4, col = 3)
-  legend("topleft", legend = paste("Utility = ",input$utility, sep = ""), col = 3, lty = 1, lwd = 4)
+    y <- seq(.01, 1.5, by = .01)
+   oppSet <- ifelse( y < 1, input$riskfree2 + (input$stDev2 * y) * ( (input$expRet2 - input$riskfree2) / input$stDev2), input$borrow + (input$stDev2 * y) * ( (input$expRet2 - input$borrow) / input$stDev2) )
+  plot(oppSet, type = 'l', xlab = "Complete Portfolio Standard Deviaion", ylab = "Complete Portfolio Expected Return", lwd = 4, col = 3, main = "Investment Opportunity Set")
+  ## legend("topleft", legend = paste("Utility = ",input$utility, sep = ""), col = 3, lty = 1, lwd = 4)
 })
 ```
+
+
+###
