@@ -123,7 +123,7 @@ We can rearrange the standard deviation to show $y = \frac{\sigma_c}{\sigma_r}$.
 
 $E(r_c) = r_f + \sigma_c\frac{E(r_r) - r_f}{\sigma_r}$
 
-This allows us to plot our possible $E(r_c)$ and $\sigma_c$ combinations (our investment opportunity set).  
+This allows us to plot our possible $E(r_c)$ and $\sigma_c$ combinations (our investment opportunity set).  We can invest anywhere on the line below by varying $y$, the proportion we invest in the risky asset.  If you allocate less than 100\% of your portfolio in the risky asset, then you invest the remaining portion of your portfolio at the risk-free rate.  However if you have over 100\% of your portfolio in the risky asset, then you borrow at the higher margin rate. The line representing our portfolio opportunity set is known as the Capital Allocation Line (CAL).
 
 ```{r opportunitySet, echo=FALSE}
 ## change to a htmlwidget ----
@@ -136,10 +136,47 @@ inputPanel(
 renderPlot({
     y <- seq(.01, 1.5, by = .01)
    oppSet <- ifelse( y < 1, input$riskfree2 + (input$stDev2 * y) * ( (input$expRet2 - input$riskfree2) / input$stDev2), input$borrow + (input$stDev2 * y) * ( (input$expRet2 - input$borrow) / input$stDev2) )
-  plot(oppSet, type = 'l', xlab = "Complete Portfolio Standard Deviaion", ylab = "Complete Portfolio Expected Return", lwd = 4, col = 3, main = "Investment Opportunity Set")
+  plot(oppSet, type = 'l', xlab = "Complete Portfolio Standard Deviaion", ylab = "Complete Portfolio Expected Return", lwd = 4, col = 3, main = "Capital Allocation Line")
   ## legend("topleft", legend = paste("Utility = ",input$utility, sep = ""), col = 3, lty = 1, lwd = 4)
 })
 ```
 
+## Optimal Allocation in the Risky Asset
 
-###
+To find the optimal place to invest on the line (the optimal value of $y$) we can plug in the equations for out complete portfolio's mean and variance into our utility function.  We then maximize the our utility function with respect to $y$.  Our utility function is:
+
+$U = E(r_c) - \frac{1}{2}A\sigma^2_c = r_f + y(E(r_r) - r_f) - \frac{1}{2}A(y\sigma_c)^2$
+
+Note, the function is quadratic and the $y^2$ term has a negative sign.  This means the function has a maximum and not a minimum.  So taking the derivative with respect to $y$ we have:
+
+$\frac{dU}{dy} = E(r_r) - r_f - Ay\sigma_c^2$
+
+setting equal to zero and solving for $y$ affords the solution:
+
+$y^* = \frac{E(r_r) - r_f}{A\sigma_c^2}$
+
+You can use the following to calculate the optimal $y$ given any input.
+
+```{r calculate_y, echo=FALSE}
+inputPanel(
+  sliderInput("expRet3", "Expected Return", min = -.2, max = 1, value = .15),
+  sliderInput("stDev3", "Standard Deviation", min = .01, max = 1, value = .2),
+  sliderInput("RA3", "Degree of Risk Aversion", min = -.5, max = 6, value = 4),
+  sliderInput("rf3", "Risk-free Rate", min = .01, max = .10, value = .02)
+)
+renderPrint({
+  y = (input$expRet3 - input$rf3)/(input$RA3 * input$stDev3^2)
+  out3 <- paste(round(y, 2), "%", sep = "")
+  cat(out3)
+})
+```
+
+#### Does this solution make sense? 
+
+The first thing you should when you see this solution is to make sure it makes economic sense.  That is, does the proportion we invest in the risky asset $y$ change as we would expect with respect to changes in its inputs.  For example, if our degree of risk aversion ($A$) increases then we would expect $y$ to decrease.  Our solution agrees.  Check that our solution agrees with the expected behavior for $E(r_r)$, $r_f$, and $\sigma_c^2$.
+
+<!---
+### Graphical Solution for $y$
+
+ overlay indifference curves and CAL -->
+
