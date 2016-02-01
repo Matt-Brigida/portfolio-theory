@@ -6,6 +6,15 @@ output: html_document
 runtime: shiny
 ---
 
+In this chapter we'll construct optimal risky portfolios. We'll do so by combining risky assets according to weights that maximize the overall risky portfolio's reward-to-risk (Sharpe) ratio.  The most important aspect of this process will be that it is completely independent of the investor's degree of risk aversion.  So if two investors have the same set of risky assets, the same estimates of means and covariances for these assets, and the same restrictions on investing, they will have the same optimal risky portfolio.
+
+This feature gave a theoretical basis for investors to delegate the construction of their risky portfolio to professional portfolio managers.  The investor then simply decides how much to invest in the professionally managed portfolio versus the risk-free asset.  Thus the construction of mean/variance optimal risky portfolios, pioneered by Harry Markowitz, had a large impact on the investment industry. This led to Markowitz receiving the Sveriges Riksbank Prize in Economic Sciences in *Memory* of Alfred Nobel in 1990.
+
+The optimal risky portfolio is an example of *efficient* diversification.  First, we'll start with a discussion of diversification in general.
+
+## What is Diversification?  
+
+We are diversifying our portfolio if, given the portfolio has a set size, we split this amount across more and more assets.  Note, you are not diversifying if you add more money to your portfolio and invest it in a new asset. 
 
 
 Portfolio Frontier with Two Risky Assets and Varying Correlation
