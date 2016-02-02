@@ -70,13 +70,17 @@ renderPrint({
 
 Note, we can find all $(E(r), \sigma)$ pairs such that their utility values are equivalent.  This pairs create *indifference curves* in $(E(r), \sigma)$.  The idea is we don't care where we are on this curve; all points provide us with the same worth.
 
+
+#### Plot an Indifference Curve
 ```{r indifferenceCurves, echo=FALSE}
 ## change to a htmlwidget ----
+library(metricsgraphics)
 inputPanel(
   sliderInput("utility", "Utility Value", min = .01, max = 1, value = .08),
   sliderInput("RA1", "Degree of Risk Aversion", min = -.5, max = 6, value = 2)
 )
-renderPlot({
+## renderPlot({
+renderMetricsgraphics({
   ## for each standard deviation, find the expected return which solves for the utility value
   expRet1 <- 0
   index <- seq(.01, 1, by = .01)
@@ -84,8 +88,13 @@ renderPlot({
   fun <- function(X){ ((X - 0.5 * input$RA1 * index[i]^2) - input$utility)^2 }
   expRet1[i] <- optim(.1, fun, method = "Brent", lower = -1, upper = 5)$par
  }
-  plot(index, expRet1, type = 'l', xlab = "Standard Deviaion", ylab = "Expected Return", lwd = 4, col = 3)
-  legend("topleft", legend = paste("Utility = ",input$utility, sep = ""), col = 3, lty = 1, lwd = 4)
+    tmp <- data.frame(Standard_Deviation = index, Expected_Return = expRet1) %>%
+        mjs_plot(x = Standard_Deviation, y = Expected_Return) %>%
+        mjs_line() %>%
+        mjs_labs(x="Standard Deviation", y="Expected Return")  %>%
+        mjs_add_legend(legend=c("Indifference Curve"))
+  ## plot(index, expRet1, type = 'l', xlab = "Standard Deviaion", ylab = "Expected Return", lwd = 4, col = 3)
+  ## legend("topleft", legend = paste("Utility = ",input$utility, sep = ""), col = 3, lty = 1, lwd = 4)
 })
 ```
 
