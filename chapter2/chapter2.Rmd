@@ -91,8 +91,8 @@ renderMetricsgraphics({
     tmp <- data.frame(Standard_Deviation = index, Expected_Return = expRet1) %>%
         mjs_plot(x = Standard_Deviation, y = Expected_Return) %>%
         mjs_line() %>%
-        mjs_labs(x="Standard Deviation", y="Expected Return")  %>%
-        mjs_add_legend(legend=c("Indifference Curve"))
+        mjs_add_legend(legend=c("Indifference Curve")) %>%
+        mjs_labs(x="Standard Deviation", y="Expected Return")  
   ## plot(index, expRet1, type = 'l', xlab = "Standard Deviaion", ylab = "Expected Return", lwd = 4, col = 3)
   ## legend("topleft", legend = paste("Utility = ",input$utility, sep = ""), col = 3, lty = 1, lwd = 4)
 })
