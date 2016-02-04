@@ -100,7 +100,9 @@ You can see if you set the coefficient to -1, then the efficient frontier has a 
 
 
 
+### Stock Return Correlations
 
+You can use the following app to see a correlation matrix of the stocks' returns.  The correlation coefficients are calculted on weekly returns from 1/1/2015 to the present. You can use this to try and find stock for your optimal portfolio.  Diversification is most effective the lower the correlation between the assets. Note, the size and color of the box represents its correlation.  Can you find any stocks/assets with negative correlations (they show up as red)?
 
 ```{r correlationMatrix, echo = FALSE}
 library(corrplot)
@@ -139,6 +141,56 @@ corrplot(M, method = "square")
 })
 ```
 
+### Downloading Stock Returns
+
+You can use the following app to download stock returns.  Input the stock tickers in the text boxes and choose the your time interval. Once you see the data in the table you can click the 'Download' button to download a csv file with the returns.  If you use this to download multiple sets of stock, note that the downloaded file is named 'stockReturns.csv' and you may want to change the name of preiously downloaded files to avoid them being overwritten.
+
+
+```{r stockRetDownload, echo = FALSE}
+library(quantmod)
+library(DT)
+inputPanel(
+    textInput("ticker21", "Stock Ticker", value = "XOM"),
+    textInput("ticker22", "Stock Ticker", value = "GE"),
+    textInput("ticker23", "Stock Ticker", value = "TSLA"),
+    textInput("ticker24", "Stock Ticker", value = "AAPL"),
+    textInput("ticker25", "Stock Ticker", value = "UNH"),
+    dateRangeInput("dates", "Input a Date Range", start = "2015-01-01", end = Sys.Date()),
+    downloadButton('downloadData', 'Download')
+)
+
+DT::renderDataTable({
+    stock1 <- getSymbols(input$ticker21, from = input$dates[1], to = input$dates[2], auto.assign = FALSE)
+    stock1 <- to.weekly(stock1)
+    stock1 <- Delt(Ad(stock1))[-1]
+    names(stock1) <- input$ticker21
+    stock2 <- getSymbols(input$ticker2, from = input$dates[1], to = input$dates[2], auto.assign = FALSE)
+    stock2 <- to.weekly(stock2)
+    stock2 <- Delt(Ad(stock2))[-1]
+    names(stock2) <- input$ticker22
+    stock3 <- getSymbols(input$ticker3, from = input$dates[1], to = input$dates[2], auto.assign = FALSE)
+    stock3 <- to.weekly(stock3)
+    stock3 <- Delt(Ad(stock3))[-1]
+    names(stock3) <- input$ticker23
+    stock4 <- getSymbols(input$ticker4, from = input$dates[1], to = input$dates[2], auto.assign = FALSE)
+    stock4 <- to.weekly(stock4)
+    stock4 <- Delt(Ad(stock4))[-1]
+    names(stock4) <- input$ticker24
+    stock5 <- getSymbols(input$ticker5, from = input$dates[1], to = input$dates[2], auto.assign = FALSE)
+    stock5 <- to.weekly(stock5)
+    stock5 <- Delt(Ad(stock5))[-1]
+    names(stock5) <- input$ticker25
+M2 <<- data.frame(cbind(stock1, stock2, stock3, stock4, stock5))
+    M2
+})
+
+output$downloadData <- downloadHandler(
+    filename = function() { paste("stockReturns", '.csv', sep='') },
+    content = function(file) {
+      write.csv(M2, file)
+    }
+  )
+```
 
 
 Testing for Portfolio Alpha
