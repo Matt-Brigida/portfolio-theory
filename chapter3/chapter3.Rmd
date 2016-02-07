@@ -14,6 +14,18 @@ The optimal risky portfolio is an example of *efficient* diversification.  First
 
 ## What is Diversification?  
 
+Diversification is an investment strategy which reduces portfolio risk without *necessarily* reducing portfolio return.
+
+### Diversification: A Mathematical Argument
+
+It works because the expected return on a portfolio is the weighted-average of the expected returns of the assets in the portfolio, but the standard deviation of the portfolio is *less than* the weighted average of the individual standard deviations of the assets in the portfolio.
+
+[Show math]
+
+### Diversification: An Economic Argument
+
+In economic terms, we can think of the risk on an assets as being decomposable into market and firm-specific induced risks.  Market risks (such as the risk of a sudden increse in interest rates) are common across all assets, and are not diversifiable.  Examples of firm-specific risks are a fire at a Ford factory or a drop in Facebook users.  As you add assets to your portfolio the good news form one company text to offset the bad news from another.  Adding enough assets, eventually all the firm-specific risk is offset and you hold only market risk. 
+
 We are diversifying our portfolio if, given the portfolio has a set size, we split this amount across more and more assets.  Note, you are not diversifying if you add more money to your portfolio and invest it in a new asset. 
 
 
