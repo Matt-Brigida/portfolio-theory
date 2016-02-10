@@ -20,11 +20,23 @@ Diversification is an investment strategy which reduces portfolio risk without *
 
 It works because the expected return on a portfolio is the weighted-average of the expected returns of the assets in the portfolio, but the standard deviation of the portfolio is *less than* the weighted average of the individual standard deviations of the assets in the portfolio.
 
-[Show math]
+That is, say we have two risky assets, A and B, in our portfolio.  The expected return on our portfolio is:
+
+$E(r_p) = w_AE(r_A) + w_BE(r_B)$
+
+where $w$ denotes the weight of the asset in our portfolio.  We see that the expected return on a portfolio is the weighted-average of the expected returns of the individual assets in the portfolio.  However the variance of the portfolio is:
+
+$\sigma_p^2 = w_A^2\sigma_A^2 + w_B^2\sigma_B^2 + 2w_Aw_B\sigma_A\sigma_B\rho_{A,B}$
+
+Importantly, the portfolio variance is a function of the correlation coefficient between the assets in the portfolio, but the expected return is not. Now, assume that $\rho_{A,B} = 1$, then:
+
+$\sigma_p^2 = (w_A\sigma_A + w_B\sigma_B)^2 \Rightarrow \sigma_p = w_A\sigma_A + w_B\sigma_B$
+
+and the risk on a portfolio is the weighted-average of the risk of the individual assets in the portfolio.  However, in practice $\rho_{A,B} < 1$ and so risk on a portfolio will be *less than* the weighted-average of the risk of the individual assets in the portfolio.  This is the benefit of diversification.  The ability to reduce risk (risk is decreasing with correlation) without necessarily reducing the expected return.  The expected return is not a function of asset correlations.
 
 ### Diversification: An Economic Argument
 
-In economic terms, we can think of the risk on an assets as being decomposable into market and firm-specific induced risks.  Market risks (such as the risk of a sudden increse in interest rates) are common across all assets, and are not diversifiable.  Examples of firm-specific risks are a fire at a Ford factory or a drop in Facebook users.  As you add assets to your portfolio the good news form one company text to offset the bad news from another.  Adding enough assets, eventually all the firm-specific risk is offset and you hold only market risk. 
+In economic terms, we can think of the risk on an assets as being decomposable into market and firm-specific induced risks.  Market risks (such as the risk of a sudden increse in interest rates) are common across all assets, and are not diversifiable.  Examples of firm-specific risks are a fire at a Ford factory or a drop in Facebook users.  As you add assets to your portfolio the good news from one company text to offset the bad news from another.  Adding enough assets, eventually all the firm-specific risk is offset and you hold only market risk. 
 
 We are diversifying our portfolio if, given the portfolio has a set size, we split this amount across more and more assets.  Note, you are not diversifying if you add more money to your portfolio and invest it in a new asset. 
 
@@ -116,7 +128,7 @@ You can see if you set the coefficient to -1, then the efficient frontier has a 
 
 You can use the following app to see a correlation matrix of the stocks' returns.  The correlation coefficients are calculted on weekly returns from 1/1/2015 to the present. You can use this to try and find stock for your optimal portfolio.  Diversification is most effective the lower the correlation between the assets. Note, the size and color of the box represents its correlation.  Can you find any stocks/assets with negative correlations (they show up as red)?
 
-```{r correlationMatrix, echo = FALSE}
+```{r correlationMatrix, echo = FALSE, cache = FALSE}
 library(corrplot)
 library(quantmod)
 inputPanel(
@@ -158,7 +170,7 @@ corrplot(M, method = "square")
 You can use the following app to download stock returns.  Input the stock tickers in the text boxes and choose the your time interval. Once you see the data in the table you can click the 'Download' button to download a csv file with the returns.  If you use this to download multiple sets of stock, note that the downloaded file is named 'stockReturns.csv' and you may want to change the name of preiously downloaded files to avoid them being overwritten.
 
 
-```{r stockRetDownload, echo = FALSE}
+```{r stockRetDownload, echo = FALSE, cache = FALSE}
 library(quantmod)
 library(DT)
 inputPanel(
@@ -205,44 +217,27 @@ output$downloadData <- downloadHandler(
 ```
 
 
-Testing for Portfolio Alpha
-========================================================
+## Example Mean-Variance Portfolio Optimization
 
+```{r echo = FALSE, message = FALSE}
+library(PortfolioAnalytics)
+renderPlot({
+    ## optimize.portfolio_v1(M2, constraints = NULL, optimize_method = c("DEoptim"), search_size = 20000, trace = FALSE, rp = NULL)
+pspec <- portfolio.spec(assets=names(M2))
+pspec <- add.constraint(portfolio=pspec,
+                         type="weight_sum",
+                         min_sum=.98,
+                         max_sum=1)
+pspec <- add.constraint(portfolio=pspec,
+                         type="box",
+                         min=0.05,
+                         max=0.4)
 
+front <- optimize.portfolio(M2, portfolio = pspec, trace = TRUE)
 
-```{r, message=FALSE,warning=FALSE, cache=TRUE}
-library(quantmod)
-env <- new.env()
-Symbols <- c('SPY', 'QQQ', 'XLF', 'TLT','IBM','AAPL','XOM','BP','DDD')
-getSymbols(Symbols = Symbols, env = env, from = '2013-01-01')
-args <- eapply(env = env, FUN = function(x){ClCl(x)})[Symbols]
-returns <- na.omit(do.call(what = merge, args = args))
-colnames(returns) <- Symbols
-
-## the basis for the code above is from the stackoverflow post here: (need to find and cite, note it might be quant.SE)
-
-srets <- as.matrix(returns)
-X <- cbind(1,srets[,1])
-alpha <- 0
-beta <- 0
-
-for (i in 1:dim(srets)[2]) {
-alpha[i] <- (solve(t(X) %*% X) %*% t(X) %*% srets[1:(dim(srets)[1]),i])[1]
-beta[i] <- (solve(t(X) %*% X) %*% t(X) %*% srets[1:(dim(srets)[1]),i])[2]}
-
-t.test(alpha)
-
-plot(density(alpha), main = "Empirical Density Function", xlab = "alpha")
-
-ab <- rbind(alpha,beta)
-
-ab <- as.data.frame(ab)
-
-names(ab) <- Symbols
-
-attach(ab)
-
-t.test(alpha[beta > 1],alpha[beta < 1])
+chart.EfficientFrontier(front)
+ 
+})
 ```
 
-###
+<!--- end -->
