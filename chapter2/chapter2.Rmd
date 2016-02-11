@@ -1,10 +1,12 @@
 ---
 title: "Portfolio Theory: Chapter 2"
-author: "Matt Brigida"
-date: "November 27, 2015"
 output: html_document
 runtime: shiny
 ---
+
+#### Authors: [GitHub Contributors](https://github.com/Matt-Brigida/portfolio-theory/graphs/contributors)
+
+*The text and code for this book is [hosted on GitHub](https://github.com/Matt-Brigida/portfolio-theory).  If you have improvements, please feel free to send along pull requests.*
 
 In this chapter we decide the proportions of our portfolio which we will invest in the risky vs risk free asset.  It may seem odd to simply assume we have two assets in which we'll invest (risky and risk-free) and try and decide the proportions in each.  Why this decision is relevant comes from the next chapter where we construct optimal risky portfolios.
 

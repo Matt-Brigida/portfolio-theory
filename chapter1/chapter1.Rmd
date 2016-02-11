@@ -1,7 +1,5 @@
 ---
-title: "Portfolio Theory"
-author: "Matt Brigida"
-date: "November 27, 2015"
+title: "Portfolio Theory: Chapter 1"
 output: html_document
 runtime: shiny
 ---
@@ -9,11 +7,12 @@ runtime: shiny
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+#### Authors: [GitHub Contributors](https://github.com/Matt-Brigida/portfolio-theory/graphs/contributors)
 
 <!---
 Note, much of the R code in this text was written long ago, when I wrote even worse R code than I do now.  The code works, but it is inefficient and ugly.  I decided not to rewrite it however, feeling it more important to get the text out and into students' hands.  If you can improve the code, please feel free.  Pull requests are always welcome.
 -->
-*The text and code for this book is [hosted on GitHub](https://github.com/Matt-Brigida/portfolio-theory).  If you have improvements, please feel free to fork the repo and issue pull requests.*
+*The text and code for this book is [hosted on GitHub](https://github.com/Matt-Brigida/portfolio-theory).  If you have improvements, please feel free to send along pull requests.*
 
 # Introduction
 

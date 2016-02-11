@@ -1,10 +1,12 @@
 ---
 title: "Portfolio Theory: Chapter 3"
-author: "Matt Brigida"
-date: "November 27, 2015"
 output: html_document
 runtime: shiny
 ---
+
+#### Authors: [GitHub Contributors](https://github.com/Matt-Brigida/portfolio-theory/graphs/contributors)
+
+*The text and code for this book is [hosted on GitHub](https://github.com/Matt-Brigida/portfolio-theory).  If you have improvements, please feel free to send along pull requests.*
 
 In this chapter we'll construct optimal risky portfolios. We'll do so by combining risky assets according to weights that maximize the overall risky portfolio's reward-to-risk (Sharpe) ratio.  The most important aspect of this process will be that it is completely independent of the investor's degree of risk aversion.  So if two investors have the same set of risky assets, the same estimates of means and covariances for these assets, and the same restrictions on investing, they will have the same optimal risky portfolio.
 
@@ -128,7 +130,7 @@ You can see if you set the coefficient to -1, then the efficient frontier has a 
 
 You can use the following app to see a correlation matrix of the stocks' returns.  The correlation coefficients are calculted on weekly returns from 1/1/2015 to the present. You can use this to try and find stock for your optimal portfolio.  Diversification is most effective the lower the correlation between the assets. Note, the size and color of the box represents its correlation.  Can you find any stocks/assets with negative correlations (they show up as red)?
 
-```{r correlationMatrix, echo = FALSE, cache = FALSE}
+```{r correlationMatrix, echo = FALSE, cache = FALSE, warning = FALSE, message = FALSE}
 library(corrplot)
 library(quantmod)
 inputPanel(
@@ -170,7 +172,7 @@ corrplot(M, method = "square")
 You can use the following app to download stock returns.  Input the stock tickers in the text boxes and choose the your time interval. Once you see the data in the table you can click the 'Download' button to download a csv file with the returns.  If you use this to download multiple sets of stock, note that the downloaded file is named 'stockReturns.csv' and you may want to change the name of preiously downloaded files to avoid them being overwritten.
 
 
-```{r stockRetDownload, echo = FALSE, cache = FALSE}
+```{r stockRetDownload, echo = FALSE, cache = FALSE, warning = FALSE, message = FALSE}
 library(quantmod)
 library(DT)
 inputPanel(
@@ -217,27 +219,13 @@ output$downloadData <- downloadHandler(
 ```
 
 
-## Example Mean-Variance Portfolio Optimization
+## Example Mean-Variance Optimal Portfolio [coming soon]
 
 ```{r echo = FALSE, message = FALSE}
-library(PortfolioAnalytics)
-renderPlot({
-    ## optimize.portfolio_v1(M2, constraints = NULL, optimize_method = c("DEoptim"), search_size = 20000, trace = FALSE, rp = NULL)
-pspec <- portfolio.spec(assets=names(M2))
-pspec <- add.constraint(portfolio=pspec,
-                         type="weight_sum",
-                         min_sum=.98,
-                         max_sum=1)
-pspec <- add.constraint(portfolio=pspec,
-                         type="box",
-                         min=0.05,
-                         max=0.4)
-
-front <- optimize.portfolio(M2, portfolio = pspec, trace = TRUE)
-
-chart.EfficientFrontier(front)
- 
-})
+# library(tawny)
+# renderPrint({
+# p.optimize(as.zoo(M2))
+# })
 ```
 
 <!--- end -->
