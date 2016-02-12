@@ -7,7 +7,9 @@ This is a course text for an undergraduate level course in Portfolio Theory.  Ev
 The text is freely available here:
 
 https://mattbrigida.shinyapps.io/PT_chapter1/
+
 https://mattbrigida.shinyapps.io/PT_chapter2/
+
 https://mattbrigida.shinyapps.io/PT_chapter3/
 
 ## Collaboration
