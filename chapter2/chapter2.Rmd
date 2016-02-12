@@ -191,3 +191,4 @@ The first thing you should when you see this solution is to make sure it makes e
 
  overlay indifference curves and CAL -->
 
+## [Link to Chapter 3](https://mattbrigida.shinyapps.io/PT_chapter3/)

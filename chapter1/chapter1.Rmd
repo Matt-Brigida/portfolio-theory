@@ -285,5 +285,8 @@ cat("The VaR assuming a normal distribution is", quantile(rnorm(500000, mean=mea
 })
 ```
 
+
+## [Link to Chapter 2](https://mattbrigida.shinyapps.io/PT_chapter2/)
+
 <!-- end -->
 
