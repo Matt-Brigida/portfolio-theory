@@ -1,11 +1,98 @@
 ---
 title: "Portfolio Theory: Chapter 7 (The Pairs Trade)"
-author: "Matt Brigida"
-date: "November 27, 2015"
 output: html_document
 runtime: shiny
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Authors: [GitHub Contributors](https://github.com/Matt-Brigida/portfolio-theory/graphs/contributors)
+
 The pairs trade is a classic example of a statistical arbitrage (stat arb) strategy---its history dates back to the 1980s.  
 
 This stragegy can be thought of as the oppposite of Markowitz mean/variance optimization.  In Markowitz we diversified efficiently, which reduces firsm specific risk but leaves market risk in our portfolio.  In the pairs trade, we'll remove market risk, and hold only firm-specific risk. Thus, the pairs trade is known as a 'market-neutral' strategy. 
+
+
+# Estimation Period
+
+```{r, messsage=FALSE, warning=FALSE, echo = FALSE}
+## in the process of translating this code into a Shiny app
+## just run for each pair?
+
+inputPanel(
+  dateRangeInput("estim_period", "Estimation Period", start = "2015-09-01", end = "2015-12-31"),
+  ## selectizeInput(tickers, "Enter Tickers", )
+  textInput("ticker1", "First Stock Ticker", value = "XOM"),
+  textInput("ticker2", "Second Stock Ticker", value = "COP")
+)
+
+renderPrint({
+    
+library(quantmod)
+## Estimation period
+from <- input$estim_period[1]
+to <- input$estim_period[2]
+
+## The code below to calculate an xts object of returns is from an SO or Quant.SE post.  I need to find it and cite.
+env <- new.env()
+Symbols <- c(input$ticker1, input$ticker2)
+getSymbols(Symbols = Symbols, env = env, from=from, to=to)
+args <- eapply(env = env, FUN = function(x){ClCl(x)})[Symbols]
+returns <- na.omit(do.call(what = merge, args = args))
+colnames(returns) <- Symbols
+## convert reutrns to  normalized prices
+norm.prices <- cumsum(returns)
+
+norm.prices.df <- as.data.frame(norm.prices)
+## function to find the average squared deviation of the normalized prices for two stocks
+## stats <- function(TIC1, TIC2){
+    cat("The average squared deviation is", mean(( norm.prices.df[,1] - norm.prices.df[,2])^2 ),"\n")
+    cat("The standard deviation of the squared deviations is:", sd(( norm.prices.df[,1] - norm.prices.df[,2])^2 ),"\n")
+## }
+
+## run this function by typing g() into the interpreter and it will create
+## a .csv file in your working directory with all the pairs and their
+## avg squared dev and stdev of squared deviation sorted from lowest
+#  avg sq dev to highest
+
+## g <- function(){
+## list <- matrix(0,nrow=dim(norm.prices.df)[2], ncol=dim(norm.prices.df)[2])
+## asds <- matrix(0,nrow=dim(norm.prices.df)[2], ncol=dim(norm.prices.df)[2])
+## asstdevs <- matrix(0,nrow=dim(norm.prices.df)[2], ncol=dim(norm.prices.df)[2])
+## for(i in 1:dim(norm.prices.df)[2]){
+##     for(j in 1:dim(norm.prices.df)[2]){
+##         list[i,j] <- as.character(paste(names(norm.prices.df)[i],names(norm.prices.df)[j]),sep="")
+##         asds[i,j] <- mean((norm.prices.df[,i]-norm.prices.df[,j])^2)
+##         asstdevs[i,j] <- sd((norm.prices.df[,i]-norm.prices.df[,j])^2)
+##           }
+##     }
+
+})
+
+```
+
+```{r echo = FALSE}
+## renderPlot({
+## ll <- dim(norm.prices.df)[2]
+## tmp1 <- rep(99,times=ll^2)
+## tmp2 <- rep(99,times=ll^2)
+## tmp3 <- rep(99,times=ll^2)
+##  for(z in 0:(ll-1)){
+##  tmp1[(z*ll+1):(z*ll+ll)] <- list[(z+1),]
+##  tmp2[(z*ll+1):(z*ll+ll)] <- asds[(z+1),]
+##  tmp3[(z*ll+1):(z*ll+ll)] <- asstdevs[(z+1),]
+## }
+## est.stats <- cbind(tmp1, tmp2, tmp3)
+## est.stats <- as.data.frame(est.stats)
+## names(est.stats) <- c("Pair","Avg. Squared. Dev","StdDev Squared Dev")
+## est.stats <- est.stats[est.stats$'Avg. Squared. Dev'!=0,]
+## est.stats <- est.stats[with(est.stats, order(est.stats[,2])),]
+## est.stats <- est.stats[seq(2, nrow(est.stats),by=2),]
+## write.csv(est.stats, file='stats_forall_pairs.csv')
+## }
+## })
+```
+
+<!--- end -->
