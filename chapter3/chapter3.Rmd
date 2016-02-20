@@ -218,6 +218,13 @@ output$downloadData <- downloadHandler(
   )
 ```
 
+## Setting Up Your Spreadsheet
+
+#### Below is a video tutorial on how to set up your spreadsheet.
+
+#### [This is the spreadsheet created in the video](http://complete-markets.com/wp-content/uploads/2016/02/spreadsheet_created_in_video.xls).
+
+<iframe width="960" height="720" src="https://www.youtube.com/embed/eP8TozKV1rQ" frameborder="0" allowfullscreen></iframe>
 
 ## Example Mean-Variance Optimal Portfolio [coming soon]
 
