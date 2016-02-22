@@ -224,7 +224,7 @@ output$downloadData <- downloadHandler(
 
 #### [This is the spreadsheet created in the video](http://complete-markets.com/wp-content/uploads/2016/02/spreadsheet_created_in_video.xls).
 
-<iframe width="960" height="720" src="https://www.youtube.com/embed/eP8TozKV1rQ" frameborder="0" allowfullscreen></iframe>
+<iframe width="960" height="720" src="https://www.youtube.com/embed/jjjQV__bSHk" frameborder="0" allowfullscreen></iframe>
 
 ## Example Mean-Variance Optimal Portfolio [coming soon]
 
