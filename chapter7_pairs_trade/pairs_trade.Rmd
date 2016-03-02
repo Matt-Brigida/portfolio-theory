@@ -14,8 +14,13 @@ The pairs trade is a classic example of a statistical arbitrage (stat arb) strat
 
 This stragegy can be thought of as the oppposite of Markowitz mean/variance optimization.  In Markowitz we diversified efficiently, which reduces firsm specific risk but leaves market risk in our portfolio.  In the pairs trade, we'll remove market risk, and hold only firm-specific risk. Thus, the pairs trade is known as a 'market-neutral' strategy. 
 
-<!--- testing if new magit setup is working -->
 
+## Implementation
+
+There is no single way to implement the pairs trade. This is an active area of research, and provides you with a venue to create your own strategy (and become wealthy if it works).  However, to learn we'll implement the strategy outlined in Gatev et al ().  
+
+
+To implement the pairs trade we'll first define what is normal behavior for a particular pair.  We do this over the 'estimation period'.  
 
 # Estimation Period
 
@@ -40,7 +45,7 @@ to <- input$estim_period[2]
 ## The code below to calculate an xts object of returns is from an SO or Quant.SE post.  I need to find it and cite.
 env <- new.env()
 Symbols <- c(input$ticker1, input$ticker2)
-getSymbols(Symbols = Symbols, env = env, from=from, to=to)
+getSymbols(Symbols = Symbols, env = env, from = from, to = to)
 args <- eapply(env = env, FUN = function(x){ClCl(x)})[Symbols]
 returns <- na.omit(do.call(what = merge, args = args))
 colnames(returns) <- Symbols
