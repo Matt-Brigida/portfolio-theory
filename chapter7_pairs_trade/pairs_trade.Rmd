@@ -20,7 +20,9 @@ This stragegy can be thought of as the oppposite of Markowitz mean/variance opti
 There is no single way to implement the pairs trade. This is an active area of research, and provides you with a venue to create your own strategy (and become wealthy if it works).  However, to learn we'll implement the strategy outlined in Gatev et al ().  
 
 
-To implement the pairs trade we'll first define what is normal behavior for a particular pair.  We do this over the 'estimation period'.  
+To implement the pairs trade we'll first define what is normal behavior for a particular pair.  We do this over the 'estimation period'.  Once the behavior is defined, we wait for the pair to behave abnormally over the trading period.  Note, the trading period is after the estimation period, and the two periods do not overlap.  
+
+The app below will give you the two parameters with which we define behavior for a particular pair and estimation periods which you input.  
 
 # Estimation Period
 
@@ -50,7 +52,7 @@ args <- eapply(env = env, FUN = function(x){ClCl(x)})[Symbols]
 returns <- na.omit(do.call(what = merge, args = args))
 colnames(returns) <- Symbols
 ## convert reutrns to  normalized prices
-norm.prices <- cumsum(returns)
+norm.prices <<- cumsum(returns)
 
 norm.prices.df <- as.data.frame(norm.prices)
 ## function to find the average squared deviation of the normalized prices for two stocks
@@ -78,11 +80,32 @@ norm.prices.df <- as.data.frame(norm.prices)
 
 })
 
+renderPlot({
+  
+ plot(norm.prices) 
+  
+})
 ```
 
+
+# Trading Period
+
+
 ```{r echo = FALSE}
-## renderPlot({
-## ll <- dim(norm.prices.df)[2]
+renderPlot({
+from.t <- input$estim_period[2] + 1
+to.t <- Sys.Date()
+
+## The code below to calculate an xts object of returns is from an SO or Quant.SE post.  I need to find it and cite.
+env.t <- new.env()
+Symbols <- c(input$ticker1, input$ticker2)
+getSymbols(Symbols = Symbols, env = env.t, from = from.t, to = to.t)
+args <- eapply(env = env.t, FUN = function(x){ClCl(x)})[Symbols]
+returns.t <- na.omit(do.call(what = merge, args = args))
+colnames(returns.t) <- Symbols
+## convert reutrns to  normalized prices
+norm.prices.t <- cumsum(returns.t)## ll <- dim(norm.prices.df)[2]
+plot(norm.prices.t[,1] - norm.prices.t[,2], main = paste0(colnames(returns.t)[1], " minus ", colnames(returns.t)[2]))
 ## tmp1 <- rep(99,times=ll^2)
 ## tmp2 <- rep(99,times=ll^2)
 ## tmp3 <- rep(99,times=ll^2)
@@ -99,7 +122,7 @@ norm.prices.df <- as.data.frame(norm.prices)
 ## est.stats <- est.stats[seq(2, nrow(est.stats),by=2),]
 ## write.csv(est.stats, file='stats_forall_pairs.csv')
 ## }
-## })
+})
 ```
 
 <!--- end -->
