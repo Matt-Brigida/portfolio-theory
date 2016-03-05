@@ -14,6 +14,10 @@ The pairs trade is a classic example of a statistical arbitrage (stat arb) strat
 
 This stragegy can be thought of as the oppposite of Markowitz mean/variance optimization.  In Markowitz we diversified efficiently, which reduces firsm specific risk but leaves market risk in our portfolio.  In the pairs trade, we'll remove market risk, and hold only firm-specific risk. Thus, the pairs trade is known as a 'market-neutral' strategy. 
 
+The strategy is a loose application of the **law of one price**.  The law of one price says that if two securities have the same payoff in all states of the world, then the two securities must have the same price.  This is enforced by arbitrage.  Say the price of security $A$ is greater than $B$, and they have the same payoff.  Then you could sell $A$ and buy $B$, earning $A-B$, and the payoffs (being the same) will net to $0$.  
+
+
+
 
 ## Implementation
 
@@ -79,10 +83,23 @@ norm.prices.df <- as.data.frame(norm.prices)
 ##     }
 
 })
+```
 
-renderPlot({
-  
- plot(norm.prices) 
+### What does a good pair look like?
+
+You want pairs whose normalized prices (cumulative returns) stay close and repeatedly cross. What you do *not* want is a pair where the difference between the prices tends to grow as if there is nothing holding the prices together.  
+
+Take a look at Exxon (XOM) and Conoco Phillips (COP) below.  This is a fairly good pair---if they diverge they tend to converge again later.  Note, this pair makes sense from an economic standpoint. We are looking for companies which are similar.  Now replace Exxon with 3D Systems (DDD).  Note the normalized prices don't seem to behave similarly. Also, the companies are very different (3D printing and major oil integrated oil and gas firm).  So there is no reason **a priori** for them to behave similarly.  
+
+In short, think about walking a dog on a leash.  You and the dog will be a bit apart, and then the dig may run to the other side, and you'll cross.  You'll never get too far apart given the leash.  This is a good pair.  
+
+The normalized prices for the pair you have entered above is charted below.  Use this to help you choose pairs.  
+
+```{r echo=FALSE}
+library(dygraphs)
+renderDygraph({
+ update <- input$ticker1
+ dygraph(norm.prices) 
   
 })
 ```
@@ -90,9 +107,12 @@ renderPlot({
 
 # Trading Period
 
+Given the behavior of the pair estimated above, we can then define periods in which the pair is behaving 'abnormally'.  During these abnormal periods we bet that the pair will again return to its normal bevavior. 
+
+Specifically, we'll monitor how many standard deviations
 
 ```{r echo = FALSE}
-renderPlot({
+renderDygraph({
 from.t <- input$estim_period[2] + 1
 to.t <- Sys.Date()
 
@@ -105,7 +125,7 @@ returns.t <- na.omit(do.call(what = merge, args = args))
 colnames(returns.t) <- Symbols
 ## convert reutrns to  normalized prices
 norm.prices.t <- cumsum(returns.t)## ll <- dim(norm.prices.df)[2]
-plot(norm.prices.t[,1] - norm.prices.t[,2], main = paste0(colnames(returns.t)[1], " minus ", colnames(returns.t)[2]))
+dygraph(norm.prices.t[,1] - norm.prices.t[,2], main = paste0(colnames(returns.t)[1], " minus ", colnames(returns.t)[2]))
 ## tmp1 <- rep(99,times=ll^2)
 ## tmp2 <- rep(99,times=ll^2)
 ## tmp3 <- rep(99,times=ll^2)
