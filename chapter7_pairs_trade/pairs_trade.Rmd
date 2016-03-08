@@ -12,10 +12,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 The pairs trade is a classic example of a statistical arbitrage (stat arb) strategy---its history dates back to the 1980s.  
 
-This stragegy can be thought of as the oppposite of Markowitz mean/variance optimization.  In Markowitz we diversified efficiently, which reduces firsm specific risk but leaves market risk in our portfolio.  In the pairs trade, we'll remove market risk, and hold only firm-specific risk. Thus, the pairs trade is known as a 'market-neutral' strategy. 
+This strategy can be thought of as the opposite of Markowitz mean/variance optimization.  In Markowitz we diversified efficiently, which reduces firm specific risk but leaves market risk in our portfolio.  In the pairs trade, we'll remove market risk, and hold only firm-specific risk. Thus, the pairs trade is known as a 'market-neutral' strategy. 
 
 The strategy is a loose application of the **law of one price**.  The law of one price says that if two securities have the same payoff in all states of the world, then the two securities must have the same price.  This is enforced by arbitrage.  Say the price of security $A$ is greater than $B$, and they have the same payoff.  Then you could sell $A$ and buy $B$, earning $A-B$, and the payoffs (being the same) will net to $0$.  
 
+Of course, two stocks will not have the same payoff in all states of the world---hence the term 'loose application'.  We hope to find two stocks whose payoffs are fairly similar in all states of the world.  
+
+For example, say we find two firms solely focus on crude oil exploration and production in the Bakken shale in North Dakota. These two firms produce identical commodities in the same place, and sell the commodity to the same market.  These two firms' payoffs should be similar functions of a common set of inputs: price of crude oil; cost of drilling; cost of mineral rights; etc.
 
 
 
@@ -31,6 +34,7 @@ The app below will give you the two parameters with which we define behavior for
 # Estimation Period
 
 ```{r, messsage=FALSE, warning=FALSE, echo = FALSE}
+#{{{
 ## in the process of translating this code into a Shiny app
 ## just run for each pair?
 
@@ -83,6 +87,7 @@ norm.prices.df <- as.data.frame(norm.prices)
 ##     }
 
 })
+#}}}
 ```
 
 ### What does a good pair look like?
@@ -109,7 +114,22 @@ renderDygraph({
 
 Given the behavior of the pair estimated above, we can then define periods in which the pair is behaving 'abnormally'.  During these abnormal periods we bet that the pair will again return to its normal bevavior. 
 
-Specifically, we'll monitor how many standard deviations
+Specifically, we'll monitor how many standard deviations the squared deviation is from its average squared deviation.  When the squared deviation deviated from its average by a threhold number of shandard deviations, we'll initiate a pairs trade.  We'll close the pairs trade when the squared deviation drops below another threshold number of standard deviations.
+
+### Thresholds
+
+It is for you to determine the thresholds at which you open and close your pairs trade.  You can take a look at what others have done, however there is no theoretical reason why the threshold should be 2 instead of 2.1.  You can, of course, run different thresholds over historical data and see what was optimal.  A decent place to start is:
+- Open the trade when the pair's squared deviation is 2 standard deviations above its average.
+- Close the trade when the pair's squared deviation goes to 0.
+
+### Opening/Closing Trades
+
+When the squared deviation goes above our threshold we then open a pairs trade.  This means we buy one stock and short another.  Two questions immediately come to mind, (1) which stock do be buy and which do we sell and (2) how much of each stock to buy and sell?
+
+#### Stock to buy/sell
+
+
+
 
 ```{r echo = FALSE}
 renderDygraph({
