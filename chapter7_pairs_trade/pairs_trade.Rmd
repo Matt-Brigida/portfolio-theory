@@ -64,9 +64,12 @@ norm.prices <<- cumsum(returns)
 
 norm.prices.df <- as.data.frame(norm.prices)
 ## function to find the average squared deviation of the normalized prices for two stocks
-## stats <- function(TIC1, TIC2){
-    cat("The average squared deviation is", mean(( norm.prices.df[,1] - norm.prices.df[,2])^2 ),"\n")
-    cat("The standard deviation of the squared deviations is:", sd(( norm.prices.df[,1] - norm.prices.df[,2])^2 ),"\n")
+  
+    ## Calculate the emtimation period parameters (the average squared deviation and the standard deviation of the squared deviations):
+    asd.e <<- mean(( norm.prices.df[,1] - norm.prices.df[,2])^2 )
+    ssd.e <<- sd(( norm.prices.df[,1] - norm.prices.df[,2])^2 )
+    cat("The average squared deviation is", asd.e ,"\n")
+    cat("The standard deviation of the squared deviations is:", ssd.e ,"\n")
 ## }
 
 ## run this function by typing g() into the interpreter and it will create
@@ -145,24 +148,36 @@ returns.t <- na.omit(do.call(what = merge, args = args))
 colnames(returns.t) <- Symbols
 ## convert reutrns to  normalized prices
 norm.prices.t <- cumsum(returns.t)## ll <- dim(norm.prices.df)[2]
-dygraph(norm.prices.t[,1] - norm.prices.t[,2], main = paste0(colnames(returns.t)[1], " minus ", colnames(returns.t)[2]))
-## tmp1 <- rep(99,times=ll^2)
-## tmp2 <- rep(99,times=ll^2)
-## tmp3 <- rep(99,times=ll^2)
-##  for(z in 0:(ll-1)){
-##  tmp1[(z*ll+1):(z*ll+ll)] <- list[(z+1),]
-##  tmp2[(z*ll+1):(z*ll+ll)] <- asds[(z+1),]
-##  tmp3[(z*ll+1):(z*ll+ll)] <- asstdevs[(z+1),]
-## }
-## est.stats <- cbind(tmp1, tmp2, tmp3)
-## est.stats <- as.data.frame(est.stats)
-## names(est.stats) <- c("Pair","Avg. Squared. Dev","StdDev Squared Dev")
-## est.stats <- est.stats[est.stats$'Avg. Squared. Dev'!=0,]
-## est.stats <- est.stats[with(est.stats, order(est.stats[,2])),]
-## est.stats <- est.stats[seq(2, nrow(est.stats),by=2),]
-## write.csv(est.stats, file='stats_forall_pairs.csv')
-## }
+
+numSD <- ( (norm.prices.t[,1] - norm.prices.t[,2])^2 - asd.e ) / ssd.e
+
+## nope
+## signal <- numSD
+## signal[signal < 0] <- 1
+## signal[signal > 0 & signal < 2] <- 0
+## signal[signal > 2] <- 2
+trade <- rep(0, length(seq_along(numSD)))
+for (i in 2:length(seq_along(numSD))) {
+    if (numSD[i] > 2 && numSD[i-1] < 2) {
+        trade[i] <- 1
+    } else {
+        if (numSD[i] < 0 && numSD[i-1] > 0) {
+            trade <- -1
+        } else {
+            trade[i] <- 0
+        }
+    }
+}
+
+cumTrade <- cumsum(trade)
+
+
+dygraph( as.xts(trade, order.by = index(numSD)) , main = paste0(colnames(returns.t)[1], " & ", colnames(returns.t)[2]), ylab = "# Standard Deviations")
 })
 ```
 
 <!--- end -->
+
+#### Why can there be such large deviation from the average?
+
+For some pairs we'll see a the average aquared deviation during the trading periods is more than 30 standard deviation from the average during the estimation period.  This seems very unlikely given Chebychev's inequality.
