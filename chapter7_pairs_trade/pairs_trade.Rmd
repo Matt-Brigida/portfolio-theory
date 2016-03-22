@@ -180,4 +180,12 @@ dygraph( as.xts(trade, order.by = index(numSD)) , main = paste0(colnames(returns
 
 #### Why can there be such large deviation from the average?
 
-For some pairs we'll see a the average aquared deviation during the trading periods is more than 30 standard deviation from the average during the estimation period.  This seems very unlikely given Chebychev's inequality.
+For some pairs we'll see a the average aquared deviation during the trading periods is more than 30 standard deviations from the average during the estimation period.  This seems very unlikely given Chebyshev's inequality, which states $P(|X - \mu| \geq k\sigma) \leq \frac{1}{k^2}$ where $X$ is a random variable with finite mean $\mu$ and standard deviation $\sigma$, and $k$ is a real number. 
+
+Plugging in 30 for $k$, we see that the probability that a random variable deviates from its mean by 30 standard deviations is less than 0.11%.  So why can we get such large deviations from the mean?
+
+The answer is fundamental to understanding the risks in the pairs trade.  The answer is that applying Chebyshev's inequality as we did above implies that the mean and standard deviation of our squared deviation did not change over time (from our estimation to trading period).  However, they will change, and often substantially.
+
+For instance, say you estimate the parameters for your BP and XOM pair, and then during your trading period the BP Gulf oil spill occurs.  Obviously, your parameters are no longer relevant, and the spread would increase well over 30 standard deviations.
+
+This highlights an important point in pairs trading; you should endure that there is no fundamental reason for the spread divergence prior to entering the trade.  This is particularly true if trading at daily frequencies.
