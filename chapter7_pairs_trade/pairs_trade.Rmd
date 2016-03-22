@@ -135,6 +135,13 @@ When the squared deviation goes above our threshold we then open a pairs trade. 
 
 
 ```{r echo = FALSE}
+inputPanel(
+    
+    sliderInput("buy", "Buy Threshold", min = .5, max = 4, value = 2, step = .1, animate = FALSE),
+    
+    sliderInput("sell", "Sell Threshold", min = 0, max = 1.5, value = 0.5, step = .1, animate = FALSE)
+)
+
 renderDygraph({
 from.t <- input$estim_period[2] + 1
 to.t <- Sys.Date()
@@ -157,22 +164,22 @@ numSD <- ( (norm.prices.t[,1] - norm.prices.t[,2])^2 - asd.e ) / ssd.e
 ## signal[signal > 0 & signal < 2] <- 0
 ## signal[signal > 2] <- 2
 trade <- rep(0, length(seq_along(numSD)))
+position <- rep(0, length(seq_along(numSD)))
+
 for (i in 2:length(seq_along(numSD))) {
-    if (numSD[i] > 2 && numSD[i-1] < 2) {
+    if (numSD[i] > input$buy && numSD[i-1] < input$buy && position[i-1] < 1) {
         trade[i] <- 1
     } else {
-        if (numSD[i] < 0 && numSD[i-1] > 0) {
-            trade <- -1
+        if (numSD[i] < input$sell && numSD[i-1] > input$sell && position[i-1] == 1) {
+            trade[i] <- -1
         } else {
             trade[i] <- 0
         }
     }
+    position[i] <- trade[i] + position[i-1]
 }
 
-cumTrade <- cumsum(trade)
-
-
-dygraph( as.xts(trade, order.by = index(numSD)) , main = paste0(colnames(returns.t)[1], " & ", colnames(returns.t)[2]), ylab = "# Standard Deviations")
+dygraph( cbind(numSD, as.xts(position, order.by = index(numSD))) , main = paste0(colnames(returns.t)[1], " & ", colnames(returns.t)[2]), ylab = "# Standard Deviations")
 })
 ```
 
