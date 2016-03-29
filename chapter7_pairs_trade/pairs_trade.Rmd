@@ -1,5 +1,5 @@
 ---
-title: "Portfolio Theory: Chapter 7 (The Pairs Trade)"
+title: "Portfolio Theory: The Pairs Trade"
 output: html_document
 runtime: shiny
 ---
@@ -41,8 +41,8 @@ The app below will give you the two parameters with which we define behavior for
 inputPanel(
   dateRangeInput("estim_period", "Estimation Period", start = "2015-09-01", end = "2015-12-31"),
   ## selectizeInput(tickers, "Enter Tickers", )
-  textInput("ticker1", "First Stock Ticker", value = "XOM"),
-  textInput("ticker2", "Second Stock Ticker", value = "COP")
+  textInput("ticker1", "First Stock Ticker", value = "JPM"),
+  textInput("ticker2", "Second Stock Ticker", value = "GS")
 )
 
 renderPrint({
@@ -125,6 +125,8 @@ It is for you to determine the thresholds at which you open and close your pairs
 - Open the trade when the pair's squared deviation is 2 standard deviations above its average.
 - Close the trade when the pair's squared deviation goes to 0.
 
+In the app below, you can try different thresholds and see the profit.  
+
 ### Opening/Closing Trades
 
 When the squared deviation goes above our threshold we then open a pairs trade.  This means we buy one stock and short another.  Two questions immediately come to mind, (1) which stock do be buy and which do we sell and (2) how much of each stock to buy and sell?
@@ -154,7 +156,7 @@ args <- eapply(env = env.t, FUN = function(x){ClCl(x)})[Symbols]
 returns.t <- na.omit(do.call(what = merge, args = args))
 colnames(returns.t) <- Symbols
 ## convert reutrns to  normalized prices
-norm.prices.t <- cumsum(returns.t)## ll <- dim(norm.prices.df)[2]
+norm.prices.t <<- cumsum(returns.t)## ll <- dim(norm.prices.df)[2]
 
 numSD <- ( (norm.prices.t[,1] - norm.prices.t[,2])^2 - asd.e ) / ssd.e
 
@@ -190,9 +192,25 @@ if(position[length(position)] == 1) {
     profitSD = profitSD
     }
                 
+## Now calculate the percent profit per standard deviation ----
+### square root of the standard dev (now in units of deviations instead of sq devs) of squared devs times the number of standard devs
+#### Don't know if this is the correct calculation -- probably not.
+amt.devs.percent <- 100 * sqrt(ssd.e) * profitSD
 
+data.dygraph <- cbind(numSD, as.xts(position, order.by = index(numSD)))
+names(data.dygraph) <- c("# of Standard Deviations", "Position: 0 = no trade, 1 = trade on")
+dygraph( data.dygraph  , main = paste0(colnames(returns.t)[1], " & ", colnames(returns.t)[2], ":  Profit in Standard Deviations: ", round(profitSD, 2) , ", Percent Profit ", round(amt.devs.percent, 2),"%"), ylab = "# Standard Deviations") %>%
+dyOptions(colors = RColorBrewer::brewer.pal(2, "Set1"))
 
-dygraph( cbind(numSD, as.xts(position, order.by = index(numSD))) , main = paste0(colnames(returns.t)[1], " & ", colnames(returns.t)[2], " & ", profitSD), ylab = "# Standard Deviations")
+})
+```
+
+```{r echo = FALSE}
+library(dygraphs)
+renderDygraph({
+ update <- input$ticker1
+ dygraph(norm.prices.t, main = "Normalized Prices Over the Trading Period") 
+  
 })
 ```
 
