@@ -179,7 +179,20 @@ for (i in 2:length(seq_along(numSD))) {
     position[i] <- trade[i] + position[i-1]
 }
 
-dygraph( cbind(numSD, as.xts(position, order.by = index(numSD))) , main = paste0(colnames(returns.t)[1], " & ", colnames(returns.t)[2]), ylab = "# Standard Deviations")
+### Now add profit calculation here ----
+## First calculate how many standard deviations we made -----
+stdev.when.trade <- trade * numSD
+profitSD <- sum(stdev.when.trade)
+
+if(position[length(position)] == 1) {
+    profitSD = profitSD - numSD[length(numSD)]
+} else {
+    profitSD = profitSD
+    }
+                
+
+
+dygraph( cbind(numSD, as.xts(position, order.by = index(numSD))) , main = paste0(colnames(returns.t)[1], " & ", colnames(returns.t)[2], " & ", profitSD), ylab = "# Standard Deviations")
 })
 ```
 
@@ -187,7 +200,7 @@ dygraph( cbind(numSD, as.xts(position, order.by = index(numSD))) , main = paste0
 
 #### Why can there be such large deviation from the average?
 
-For some pairs we'll see a the average aquared deviation during the trading periods is more than 30 standard deviations from the average during the estimation period.  This seems very unlikely given Chebyshev's inequality, which states $P(|X - \mu| \geq k\sigma) \leq \frac{1}{k^2}$ where $X$ is a random variable with finite mean $\mu$ and standard deviation $\sigma$, and $k$ is a real number. 
+For some pairs we'll see a the average squared deviation during the trading periods is more than 30 standard deviations from the average during the estimation period.  This seems very unlikely given Chebyshev's inequality, which states $P(|X - \mu| \geq k\sigma) \leq \frac{1}{k^2}$ where $X$ is a random variable with finite mean $\mu$ and standard deviation $\sigma$, and $k$ is a real number. 
 
 Plugging in 30 for $k$, we see that the probability that a random variable deviates from its mean by 30 standard deviations is less than 0.11%.  So why can we get such large deviations from the mean?
 
