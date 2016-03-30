@@ -106,7 +106,8 @@ The normalized prices for the pair you have entered above is charted below.  Use
 ```{r echo=FALSE}
 library(dygraphs)
 renderDygraph({
- update <- input$ticker1
+    update1 <- input$ticker1
+    update2 <- input$ticker2
  dygraph(norm.prices) 
   
 })
@@ -195,11 +196,26 @@ if(position[length(position)] == 1) {
 ## Now calculate the percent profit per standard deviation ----
 ### square root of the standard dev (now in units of deviations instead of sq devs) of squared devs times the number of standard devs
 #### Don't know if this is the correct calculation -- probably not.
-amt.devs.percent <- 100 * sqrt(ssd.e) * profitSD
+## amt.devs.percent <- 100 * sqrt(ssd.e) * profitSD
+
+## This % profit calculation looks correct ----
+## instead, just look at spread on that day in norm.prices.t
+spread.when.trade <- trade * abs(norm.prices.t[,1] - norm.prices.t[,2])
+profit.percent <- sum(spread.when.trade)
+
+
+if(position[length(position)] == 1) {
+    profit.percent = profit.percent - abs(norm.prices.t[dim(norm.prices.t)[1], 1] - norm.prices.t[dim(norm.prices.t)[1], 2])
+} else {
+    profit.percent = profit.percent
+    }
+
+profit.percent <- profit.percent * 100
 
 data.dygraph <- cbind(numSD, as.xts(position, order.by = index(numSD)))
 names(data.dygraph) <- c("# of Standard Deviations", "Position: 0 = no trade, 1 = trade on")
-dygraph( data.dygraph  , main = paste0(colnames(returns.t)[1], " & ", colnames(returns.t)[2], ":  Profit in Standard Deviations: ", round(profitSD, 2) , ", Percent Profit ", round(amt.devs.percent, 2),"%"), ylab = "# Standard Deviations") %>%
+
+dygraph( data.dygraph  , main = paste0(colnames(returns.t)[1], " & ", colnames(returns.t)[2], ":  Profit in Standard Deviations: ", round(profitSD, 2) , ", Percent Profit ", round(profit.percent, 2), "%"), ylab = "# Standard Deviations") %>%
 dyOptions(colors = RColorBrewer::brewer.pal(2, "Set1"))
 
 })
@@ -208,9 +224,10 @@ dyOptions(colors = RColorBrewer::brewer.pal(2, "Set1"))
 ```{r echo = FALSE}
 library(dygraphs)
 renderDygraph({
- update <- input$ticker1
- dygraph(norm.prices.t, main = "Normalized Prices Over the Trading Period") 
-  
+    update3 <- input$ticker1
+    update4 <- input$ticker2
+    dygraph(norm.prices.t, main = "Normalized Prices Over the Trading Period") 
+    
 })
 ```
 
