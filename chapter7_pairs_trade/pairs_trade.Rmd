@@ -20,8 +20,6 @@ Of course, two stocks will not have the same payoff in all states of the world--
 
 For example, say we find two firms solely focus on crude oil exploration and production in the Bakken shale in North Dakota. These two firms produce identical commodities in the same place, and sell the commodity to the same market.  These two firms' payoffs should be similar functions of a common set of inputs: price of crude oil; cost of drilling; cost of mineral rights; etc.
 
-
-
 ## Implementation
 
 There is no single way to implement the pairs trade. This is an active area of research, and provides you with a venue to create your own strategy (and become wealthy if it works).  However, to learn we'll implement the strategy outlined in [Gatev, Goetzmann, and Rouwenhorst (2006)](http://www-stat.wharton.upenn.edu/~steele/Courses/434/434Context/PairsTrading/PairsTradingGGR.pdf).  
@@ -97,7 +95,9 @@ norm.prices.df <- as.data.frame(norm.prices)
 
 You want pairs whose normalized prices (cumulative returns) stay close and repeatedly cross. What you do *not* want is a pair where the difference between the prices tends to grow as if there is nothing holding the prices together.  
 
-Take a look at Exxon (XOM) and Conoco Phillips (COP) below.  This is a fairly good pair---if they diverge they tend to converge again later.  Note, this pair makes sense from an economic standpoint. We are looking for companies which are similar.  Now replace Exxon with 3D Systems (DDD).  Note the normalized prices don't seem to behave similarly. Also, the companies are very different (3D printing and major oil integrated oil and gas firm).  So there is no reason **a priori** for them to behave similarly.  
+Take a look at JP Morgan (JPM) and Goldman Sachs (GS) below.  This is a fairly good pair until the middle of November---if they diverge they tend to converge again later.  After the mid-November the pair's spread tends to widen over the next month.  It is questionable whether this is a good pair.  Note, however this pair makes sense from an economic standpoint. We are looking for companies which are similar.  
+
+Now replace GS with 3D Systems (DDD).  This is unquestionable a bad pair, from an economic and statistical stanpoint.  Note the normalized prices don't seem to behave similarly. Also, the companies are very different (3D printing and investment banking).  So there is no reason **a priori** for them to behave similarly.  
 
 In short, think about walking a dog on a leash.  You and the dog will be a bit apart, and then the dig may run to the other side, and you'll cross.  You'll never get too far apart given the leash.  This is a good pair.  
 
