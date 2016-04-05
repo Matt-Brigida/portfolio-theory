@@ -11,7 +11,13 @@ runtime: shiny
 
 #### Videos:
 
+##### Lecture on the Pairs Trade
+
 <iframe width="560" height="315" src="https://www.youtube.com/embed/vFetyj_mIkg" frameborder="0" allowfullscreen></iframe>
+
+##### Screencast on Using these Lecture Notes
+
+<iframe width="420" height="315" src="https://www.youtube.com/embed/2dNr90wKYc0" frameborder="0" allowfullscreen></iframe>
 
 ## Introduction
 
