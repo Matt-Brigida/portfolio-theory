@@ -4,11 +4,16 @@ output: html_document
 runtime: shiny
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
 #### Authors: [GitHub Contributors](https://github.com/Matt-Brigida/portfolio-theory/graphs/contributors)
+
+#### GitHub: [GitHup Repository](https://github.com/Matt-Brigida/portfolio-theory)
+
+#### Videos:
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/vFetyj_mIkg" frameborder="0" allowfullscreen></iframe>
+
+## Introduction
 
 The pairs trade is a classic example of a statistical arbitrage (stat arb) strategy---its history dates back to the 1980s.  
 
@@ -104,21 +109,23 @@ In short, think about walking a dog on a leash.  You and the dog will be a bit a
 The normalized prices for the pair you have entered above is charted below.  Use this to help you choose pairs.  
 
 ```{r echo=FALSE}
+#{{{
 library(dygraphs)
 renderDygraph({
     update1 <- input$ticker1
     update2 <- input$ticker2
+    update.e1 <- input$estim_period
  dygraph(norm.prices) 
-  
+#}}} 
 })
 ```
 
 
 # Trading Period
 
-Given the behavior of the pair estimated above, we can then define periods in which the pair is behaving 'abnormally'.  During these abnormal periods we bet that the pair will again return to its normal bevavior. 
+Given the behavior of the pair estimated above, we can then define periods in which the pair is behaving 'abnormally'.  During these abnormal periods we bet that the pair will again return to its normal behavior. 
 
-Specifically, we'll monitor how many standard deviations the squared deviation is from its average squared deviation.  When the squared deviation deviated from its average by a threhold number of shandard deviations, we'll initiate a pairs trade.  We'll close the pairs trade when the squared deviation drops below another threshold number of standard deviations.
+Specifically, we'll monitor how many standard deviations the squared deviation is from its average squared deviation.  When the squared deviation deviated from its average by a threshold number of standard deviations, we'll initiate a pairs trade.  We'll close the pairs trade when the squared deviation drops below another threshold number of standard deviations.
 
 ### Thresholds
 
@@ -151,6 +158,7 @@ For example, say stock A has a beta of 0.8, and stock B has a beta of 1.2.  Then
 
 
 ```{r echo = FALSE}
+#{{{
 inputPanel(
     
     sliderInput("buy", "Enter Trade at Threshold:", min = .5, max = 4, value = 2, step = .1, animate = FALSE),
@@ -230,17 +238,20 @@ names(data.dygraph) <- c("# of Standard Deviations", "Position: 0 = no trade, 1 
 
 dygraph( data.dygraph  , main = paste0(colnames(returns.t)[1], " & ", colnames(returns.t)[2], ":  Profit in Standard Deviations: ", round(profitSD, 2) , ", Percent Profit ", round(profit.percent, 2), "%"), ylab = "# Standard Deviations") %>%
 dyOptions(colors = RColorBrewer::brewer.pal(2, "Set1"))
+#}}}    
 
 })
 ```
 
 ```{r echo = FALSE}
+#{{{
 library(dygraphs)
 renderDygraph({
     update3 <- input$ticker1
     update4 <- input$ticker2
+    update.e2 <- input$estim_period
     dygraph(norm.prices.t, main = "Normalized Prices Over the Trading Period") 
-    
+#}}}    
 })
 ```
 
