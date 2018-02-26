@@ -181,33 +181,39 @@ inputPanel(
     textInput("ticker23", "Stock Ticker", value = "TSLA"),
     textInput("ticker24", "Stock Ticker", value = "AAPL"),
     textInput("ticker25", "Stock Ticker", value = "UNH"),
-    dateRangeInput("dates", "Input a Date Range", start = "2015-01-01", end = Sys.Date()),
+    dateRangeInput("dates", "Input a Date Range", start = "2017-01-01", end = Sys.Date()),
     downloadButton('downloadData', 'Download')
 )
 
 DT::renderDataTable({
-    stock1 <- getSymbols(input$ticker21, from = input$dates[1], to = input$dates[2], auto.assign = FALSE)
-    stock1 <- to.weekly(stock1)
-    stock1 <- Delt(Ad(stock1))[-1]
-    names(stock1) <- input$ticker21
-    stock2 <- getSymbols(input$ticker2, from = input$dates[1], to = input$dates[2], auto.assign = FALSE)
-    stock2 <- to.weekly(stock2)
-    stock2 <- Delt(Ad(stock2))[-1]
-    names(stock2) <- input$ticker22
-    stock3 <- getSymbols(input$ticker3, from = input$dates[1], to = input$dates[2], auto.assign = FALSE)
-    stock3 <- to.weekly(stock3)
-    stock3 <- Delt(Ad(stock3))[-1]
-    names(stock3) <- input$ticker23
-    stock4 <- getSymbols(input$ticker4, from = input$dates[1], to = input$dates[2], auto.assign = FALSE)
-    stock4 <- to.weekly(stock4)
-    stock4 <- Delt(Ad(stock4))[-1]
-    names(stock4) <- input$ticker24
-    stock5 <- getSymbols(input$ticker5, from = input$dates[1], to = input$dates[2], auto.assign = FALSE)
-    stock5 <- to.weekly(stock5)
-    stock5 <- Delt(Ad(stock5))[-1]
-    names(stock5) <- input$ticker25
-M2 <<- data.frame(cbind(stock1, stock2, stock3, stock4, stock5))
-    M2
+        
+        stock21 <- getSymbols(input$ticker21, from = input$dates[1], to = input$dates[2], auto.assign = FALSE)
+        stock21 <- to.weekly(stock21)
+        stock21 <- Delt(Ad(stock21))[-1]
+        names(stock21) <- input$ticker21
+        
+        stock22 <- getSymbols(input$ticker22, from = input$dates[1], to = input$dates[2], auto.assign = FALSE)
+        stock22 <- to.weekly(stock22)
+        stock22 <- Delt(Ad(stock22))[-1]
+        names(stock22) <- input$ticker22
+        
+        stock23 <- getSymbols(input$ticker23, from = input$dates[1], to = input$dates[2], auto.assign = FALSE)
+        stock23 <- to.weekly(stock23)
+        stock23 <- Delt(Ad(stock23))[-1]
+        names(stock23) <- input$ticker23
+        
+        stock24 <- getSymbols(input$ticker24, from = input$dates[1], to = input$dates[2], auto.assign = FALSE)
+        stock24 <- to.weekly(stock24)
+        stock24 <- Delt(Ad(stock24))[-1]
+        names(stock24) <- input$ticker24
+        
+        stock25 <- getSymbols(input$ticker25, from = input$dates[1], to = input$dates[2], auto.assign = FALSE)
+        stock25 <- to.weekly(stock25)
+        stock25 <- Delt(Ad(stock25))[-1]
+        names(stock25) <- input$ticker25
+        
+        M2 <<- data.frame(cbind(stock21, stock22, stock23, stock24, stock25))
+        M2
 })
 
 output$downloadData <- downloadHandler(
